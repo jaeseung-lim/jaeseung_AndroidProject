@@ -47,7 +47,7 @@ private static final String TAG = "SNS_SignUpActivity";// 로그찍을때 태그
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
+        Log.v(TAG, "onResume/ SignUpActivity 보임");
     }
 
     @Override

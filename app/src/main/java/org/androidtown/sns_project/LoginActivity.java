@@ -38,9 +38,10 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Log.v(TAG, "로그인 엑티비티");
+        Log.v(TAG, "onCreate 로그인 엑티비티");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ///////////////////////////// 파이어 베이스 인증 관련 엑티비티를 띄우기 위한 것
@@ -54,7 +55,6 @@ public class LoginActivity extends AppCompatActivity {
                         .setAvailableProviders(providers)
                         .build(), RC_SIGN_IN);*/ // 액티비티를 호출 시켜서 setResult에 결과를 담아 onActivityResult()로 결과를 넘겨준다. (onActivityResult()에서는 결과를 확인한다.)
         ///////////////////////////// 파이어 베이스 인증 관련 엑티비티를 띄우기 위한 것
-
 
         //사용자 데이터 요청해주는것
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -83,14 +83,24 @@ public class LoginActivity extends AppCompatActivity {
         // Check if user is signed in (non-null) and update UI accordingly.
 
         // 현재 로그인 되어있는 사용자가 있는지 확인해줌
-        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        Intent 메인로그아웃=getIntent();
+        String 로그아웃확인=메인로그아웃.getExtras().getString("로그아웃");
+        Log.v(TAG, "onStart의 로그아웃확인 : " + 로그아웃확인);
 
-        if(account!=null) {
-            String idToken = account.getId();
-            Log.v(TAG, "onStart의 idTokem" + idToken);
-            startToast("구글 로그인이 되어있습니다.");
-            finish();//
+        if(로그아웃확인!="로그아웃") {
+
+
+        }else if (로그아웃확인 == "처음로그인"){
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+            if (account != null) {
+                String idToken = account.getId();
+                Log.v(TAG, "onStart의 idTokem" + idToken);
+                startToast("구글 로그인이 되어있습니다.");
+                finish();//
+            }
         }
+
+
 
         //FirebaseUser currentUser = mAuth.getCurrentUser();
         //updateUI(currentUser);
@@ -105,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
+        Log.v(TAG, "onResume/ LoginActivity 보임");
     }
 
     @Override

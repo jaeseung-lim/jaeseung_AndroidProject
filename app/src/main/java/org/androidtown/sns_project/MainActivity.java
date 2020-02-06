@@ -11,6 +11,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
+    public boolean 로그아웃=false;
+
     private static final String TAG = "SNS_MainActivity";// 로그찍을때 태그
 
     @Override
@@ -25,13 +27,12 @@ public class MainActivity extends AppCompatActivity {
 
             Log.v(TAG, "로그인 유저 없음");
             Log.v(TAG, "로그인 엑티비티로 이동");
-            myStartActivity(LoginActivity.class); // 로그인된 유저가 없다면 로그인 페이지로 이
+            myStartActivity(LoginActivity.class,""); // 로그인된 유저가 없다면 로그인 페이지로 이
 
             //startSignUpActivity();
             // 앱의 흐름
             // 1. 메인 화면을 처음 시작하고
             // 2. 로그인된 유저가 없다면 회원가입 화면으로 전환됌
-
         }
 
         Log.d(TAG, "로그인 유저 있음");
@@ -46,22 +47,26 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.v(TAG, "onRestart");
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
+        Log.v(TAG, "onResume/ MainActivity 보임");
+        findViewById(R.id.logoutButton).setOnClickListener(onClickListener);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.v(TAG, "onPause");
+
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.v(TAG, "onRestart");
+    }
+
+
 
     @Override
     protected void onStop() {
@@ -83,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             switch (v.getId()){
                 case R.id.logoutButton:
                     FirebaseAuth.getInstance().signOut(); // 로그아웃 함수
-                    myStartActivity(LoginActivity.class);
+                    myStartActivity(LoginActivity.class,"로그아웃");
                     break;
             }
 
@@ -97,11 +102,22 @@ public class MainActivity extends AppCompatActivity {
         System.exit(1);
     }
 
-    private void myStartActivity(Class c){
+    private void myStartActivity(Class c,String s){
 
-        Intent intent=new Intent(this,c);
-        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+
+        if(s=="로그아웃") {
+            Intent intent = new Intent(this, c);
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("로그아웃", "로그아웃");
+            Log.v(TAG, "로그아웃!");
+            startActivity(intent);
+        }else {
+            Intent intent = new Intent(this, c);
+            intent.putExtra("로그아웃", "처음로그인");
+            Log.v(TAG, "처음로그인!");
+            //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
 
     }
 

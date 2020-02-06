@@ -48,7 +48,7 @@ public class PasswordResetActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.v(TAG, "onResume");
+        Log.v(TAG, "onResume/ PasswordResetActivity 보임");
     }
 
     @Override
