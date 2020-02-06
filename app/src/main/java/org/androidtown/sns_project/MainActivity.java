@@ -84,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.logoutButton:
                     FirebaseAuth.getInstance().signOut(); // 로그아웃 함수
                     myStartActivity(LoginActivity.class);
-                    //finish(); // 로그아웃 했을때 MainActivity
                     break;
             }
 
