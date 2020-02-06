@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "521264938872",
+    "firebase_url": "https://sns-project-dc2f5.firebaseio.com",
+    "project_id": "sns-project-dc2f5",
+    "storage_bucket": "sns-project-dc2f5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:521264938872:android:2315ae58b19dc33313d28d",
+        "android_client_info": {
+          "package_name": "org.androidtown.sns_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "521264938872-muhphkf3i02pnv10n114lc83pv6u0n3o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZMemyCEKZ0JJkrUALsG98n_R9JRshqps"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "521264938872-muhphkf3i02pnv10n114lc83pv6u0n3o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
