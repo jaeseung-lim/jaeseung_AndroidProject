@@ -20,7 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 public class LoginActivity extends AppCompatActivity {
 private static final String TAG = "SNS_LoginActivity";// 로그찍을때 태그
     private FirebaseAuth mAuth; //1. 파이어 베이스 인스턴스 생성
-//
+//@
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
