@@ -125,13 +125,15 @@ private static final String TAG = "SNS_SignUpActivity";// 로그찍을때 태그
                                 } else {//회원가입 실패시
                                     // If sign in fails, display a message to the user.
                                     //Log.w(TAG, "회원가입 실패 ", task.getException());
-                                    Log.d(TAG, "회원가입 실패시 (task.isSuccessful - fail)");
+                                    Log.d(TAG, "회원가입 실패시 (task.isSuccessful) : "+task.isSuccessful());
 
-                                    if(task.getException() != null){//아무것도 입력하지 않았을때 + 형식에 맞지 않았을때 오류문자를 보내줌
-                                        Log.d(TAG, "회원가입 실패시 (task.getException - 빈값이 아님)");
+                                    if(task.getException() != null){//아무것도 입력하지 않았을때; + 형식에 맞지 않았을때 오류문자를 보내줌
+                                        Log.d(TAG, "회원가입 실패시 (task.getException : "+task.getException());
                                         startToast(task.getException().toString());
                                         startToast("비밀번호를 6자리 이상 입력해주세요.");
-                                    }
+                                    }else
+                                        Log.d(TAG, "회원가입 실패시 (task.getException : "+task.getException());
+
                                     //Toast.makeText(this, "회원가입 실패 ",Toast.LENGTH_SHORT).show();
                                     //updateUI(null);
                                 }

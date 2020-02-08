@@ -84,14 +84,14 @@ public class LoginActivity extends AppCompatActivity {
 
         // 현재 로그인 되어있는 사용자가 있는지 확인해줌
         Intent 메인로그아웃=getIntent();
-        String 로그아웃확인=메인로그아웃.getExtras().getString("로그아웃");
+        int 로그아웃확인=메인로그아웃.getExtras().getInt("로그아웃");
         Log.v(TAG, "onStart의 로그아웃확인 : " + 로그아웃확인);
 
-        if(로그아웃확인!="로그아웃") {
+        if(로그아웃확인==1) { // 로그아웃 하였다면
+            //startToast("로그아웃 하셨습니다.");
 
-
-        }else if (로그아웃확인 == "처음로그인"){
-            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+        }else if (로그아웃확인 == 0){ // 로그인된 유져가 없다면
+            GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this); // 마지막으로 로그인된 사용자 데이터 가져옴
             if (account != null) {
                 String idToken = account.getId();
                 Log.v(TAG, "onStart의 idTokem" + idToken);
@@ -232,6 +232,7 @@ public class LoginActivity extends AppCompatActivity {
         String email=((EditText)findViewById(R.id.emailEditText)).getText().toString(); // 이메일 입력창에 입력된 값을 받아오는 작업
         String password=((EditText)findViewById(R.id.passwordEditText)).getText().toString();// 비밀번호 입력창에 입력된 값을 받아오는 작업
 
+        Log.v(TAG, "email : "+email+" password : "+password);
 
         if(email.length()>0 && password.length()>0){
 
@@ -239,17 +240,20 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.v(TAG, "task.isSuccessful() "+task.isSuccessful());
                             if (task.isSuccessful()) {
 
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 startToast("로그인에 성공하였습니다.");
                                 myStartActivity(MainActivity.class);
 
-                            } else {
+                            } else if(task.isSuccessful()!=true){
 
                                 if(task.getException() != null){//아무것도 입력하지 않았을때 + 형식에 맞지 않았을때 오류문자를 보내줌
                                     startToast(task.getException().toString());
                                     startToast("아이디 또는 비밀번호를 확인해주세요.");
+                                }else if(task.getException()==null){
+                                    startToast("아이디 또는 비밀번호를 입력하지 않았습니다.");
                                 }
 
                             }
@@ -257,8 +261,9 @@ public class LoginActivity extends AppCompatActivity {
                     });
 
         }else { // 이메일,비밀번호,비밀번호확인 값을 중 최소 1개라도 입력하지 않는다면..
-            startToast("이메일 또는 비밀번호를 입력해주세요.");
+            startToast("이메일 와 비밀번호를 입력해주세요.");
         }
+
     }
 
     private void startToast(String msg){

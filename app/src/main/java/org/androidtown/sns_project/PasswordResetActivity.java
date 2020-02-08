@@ -105,6 +105,8 @@ public class PasswordResetActivity extends AppCompatActivity {
                                 //Log.d(TAG, "Email sent.");
                                 startToast("비밀번호 재설정 이메일이 발송되었습니다.");
                                 finish(); // SignUpActivity 화면 종료
+                            }else if(task.isSuccessful()!=true){
+                                startToast("유효하지 않는 이메일 입니다.");
                             }
                         }
                     });
