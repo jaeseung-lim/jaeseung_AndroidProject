@@ -29,6 +29,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:19.2.0' // 파이어베이스 인증
     implementation 'com.google.android.gms:play-services-auth:17.0.0' // 파이어베이스 구글 로그인 인증
 
+    implementation 'com.google.firebase:firebase-firestore:21.4.0'// 파이어베이스 Cloud Firestore
+
     //implementation 'com.firebaseui:firebase-ui-auth:4.3.1' // 파이어베이스 전용 ui 제공툴
 
 

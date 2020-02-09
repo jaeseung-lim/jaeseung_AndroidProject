@@ -91,13 +91,16 @@ public class LoginActivity extends AppCompatActivity {
             //startToast("로그아웃 하셨습니다.");
 
         }else if (로그아웃확인 == 0){ // 로그인된 유져가 없다면
+
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this); // 마지막으로 로그인된 사용자 데이터 가져옴
+
             if (account != null) {
                 String idToken = account.getId();
                 Log.v(TAG, "onStart의 idTokem" + idToken);
                 startToast("구글 로그인이 되어있습니다.");
                 finish();//
             }
+
         }
 
 
