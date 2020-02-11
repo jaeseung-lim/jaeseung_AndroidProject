@@ -17,7 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpActivity extends AppCompatActivity {
-private static final String TAG = "SNS_SignUpActivity";// 로그찍을때 태그
+private static final String TAG = "SignUpActivity";// 로그찍을때 태그
     private FirebaseAuth mAuth; //1. 파이어 베이스 인스턴스 생성
 
     @Override

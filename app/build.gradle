@@ -5,7 +5,7 @@ android {
     compileSdkVersion 29
     defaultConfig {
         applicationId "org.androidtown.sns_project"
-        minSdkVersion 26
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
@@ -30,13 +30,15 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:17.0.0' // 파이어베이스 구글 로그인 인증
 
     implementation 'com.google.firebase:firebase-firestore:21.4.0'// 파이어베이스 Cloud Firestore
-
+    implementation 'com.google.firebase:firebase-storage:19.1.1'// 파이어베이스 Cloud Storage
+//
     //implementation 'com.firebaseui:firebase-ui-auth:4.3.1' // 파이어베이스 전용 ui 제공툴
 
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

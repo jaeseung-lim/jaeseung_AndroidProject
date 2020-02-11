@@ -18,7 +18,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class PasswordResetActivity extends AppCompatActivity {
 
-    private static final String TAG = "SNS_PasswordResetActivity";// 로그찍을때 태그
+    private static final String TAG = "PasswordResetActivity";// 로그찍을때 태그
 
     private FirebaseAuth mAuth; //1. 파이어 베이스 인스턴스 생성
 

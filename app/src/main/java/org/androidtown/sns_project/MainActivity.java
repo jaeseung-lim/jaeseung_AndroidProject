@@ -1,5 +1,6 @@
 package org.androidtown.sns_project;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -9,15 +10,20 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserInfo;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
 
     public boolean 로그아웃=false;
 
-    private static final String TAG = "SNS_MainActivity";// 로그찍을때 태그
+    private static final String TAG = "MainActivity";// 로그찍을때 태그
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,9 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         Log.v(TAG, "onStart");
 
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인하기
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인 + 현재 유저 정보 가져옴
+        FirebaseFirestore db = FirebaseFirestore.getInstance(); // 파이어베이스 DB 초기화
+
 
         if(user==null){ // 만약 현재 로그인한 유저가 없다면..
 
@@ -49,11 +57,37 @@ public class MainActivity extends AppCompatActivity {
             // 1. 메인 화면을 처음 시작하고
             // 2. 로그인된 유저가 없다면 회원가입 화면으로 전환됌
         }else{ // 로그인 완료되었다면...
+            myStartActivity1(MemberinitActivity.class); // 임시로
+            //myStartActivity1(CameraActivity.class);
 
             Log.v(TAG, "로그인 유저 : "+user);
             startToast("로그인 되었습니다.");
 
-            for (UserInfo profile : user.getProviderData()) { // 로그인된 유저의 회원정보를 받아온다.
+            DocumentReference docRef = db.collection("Members").document(user.getUid());
+            // 파이어 베이스 DB 참조 -- "Members"라는 collection의 user고유키값으로 파악
+            docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+
+                        Log.d(TAG, "document = task.getResult(): " + document);
+
+                        if(document!=null){ // 해당 문서의 존재가 있다면
+                            if (document.exists()) {
+                                Log.d(TAG, "유저의 데이터가 있다. DocumentSnapshot data: " + document.getData());
+                            } else {
+                                Log.d(TAG, "유저의 데이터가 없다.");
+                                myStartActivity1(MemberinitActivity.class);
+                            }
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+
+            /*for (UserInfo profile : user.getProviderData()) { // 로그인된 유저의 회원정보를 받아온다.
                 // Id of the provider (ex: google.com)
                 String providerId = profile.getProviderId(); // 구글 로그인 하였을 경우시
 
@@ -84,7 +118,7 @@ public class MainActivity extends AppCompatActivity {
                     }else
                         startToast("회원정보가 입력 되어 있습니다.");
                 }
-            }
+            }*/
 
         }
 
