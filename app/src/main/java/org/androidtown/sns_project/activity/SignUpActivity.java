@@ -1,4 +1,4 @@
-package org.androidtown.sns_project;
+package org.androidtown.sns_project.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.androidtown.sns_project.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

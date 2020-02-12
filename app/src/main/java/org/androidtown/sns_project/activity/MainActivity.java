@@ -1,10 +1,9 @@
-package org.androidtown.sns_project;
+package org.androidtown.sns_project.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,10 +13,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.androidtown.sns_project.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             // 1. 메인 화면을 처음 시작하고
             // 2. 로그인된 유저가 없다면 회원가입 화면으로 전환됌
         }else{ // 로그인 완료되었다면...
-            myStartActivity1(MemberinitActivity.class); // 임시로
+            //myStartActivity1(MemberinitActivity.class); // 임시로
             //myStartActivity1(CameraActivity.class);
 
             Log.v(TAG, "로그인 유저 : "+user);

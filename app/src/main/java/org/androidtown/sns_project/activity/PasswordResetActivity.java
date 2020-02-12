@@ -1,4 +1,4 @@
-package org.androidtown.sns_project;
+package org.androidtown.sns_project.activity;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -12,9 +12,9 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
+import org.androidtown.sns_project.R;
 
 public class PasswordResetActivity extends AppCompatActivity {
 
@@ -31,6 +31,7 @@ public class PasswordResetActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance(); // 2. 파이어 베이스 인스턴스 초기화
 
         findViewById(R.id.sendPasswordButton).setOnClickListener(onClickListener); // 버튼 아이디
+        findViewById(R.id.loginbutton2).setOnClickListener(onClickListener); // 버튼 아이디
     }
 
     @Override
@@ -84,7 +85,7 @@ public class PasswordResetActivity extends AppCompatActivity {
                 case R.id.loginbutton2:
                     Log.v(TAG, "로그인 버튼 누름");
                     myStartActivity(LoginActivity.class);
-                    finish(); // SignUpActivity 화면 종료
+                    finish(); // LoginActivity 화면 종료
                     break;
 
             }

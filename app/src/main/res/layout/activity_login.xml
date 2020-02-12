@@ -65,8 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#B6BABD"
-                android:text="    로그인" />
+                android:background="#D8D8D8"
+                android:text="일반 로그인" />
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/sign_in_button"
@@ -90,14 +90,15 @@
             <Button
                 android:id="@+id/signupButton"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="#E91E63"
                 android:text="회원가입" />
 
             <Button
                 android:id="@+id/gotoPasswordResetButton"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="비밀번호 재설정" />
         </LinearLayout>

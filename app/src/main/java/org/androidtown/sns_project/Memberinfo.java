@@ -15,6 +15,12 @@ public class Memberinfo { // 멤버들의 정보를 객체화 시켜서 파이�
         this.photoUrl=photoUrl;
     }
 
+    public Memberinfo(String name,String introduce){
+
+        this.name=name;
+        this.introduce=introduce;
+    }
+
     public String getName(){
         return this.name;
     }

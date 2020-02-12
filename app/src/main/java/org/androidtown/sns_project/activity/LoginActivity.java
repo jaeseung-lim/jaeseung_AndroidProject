@@ -1,8 +1,7 @@
-package org.androidtown.sns_project;
+package org.androidtown.sns_project.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.method.SingleLineTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -24,8 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
-import java.util.Arrays;
-import java.util.List;
+import org.androidtown.sns_project.R;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;

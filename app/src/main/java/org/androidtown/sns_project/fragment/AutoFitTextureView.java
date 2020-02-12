@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.androidtown.sns_project;
+package org.androidtown.sns_project.fragment;
 
 import android.content.Context;
 import android.util.AttributeSet;

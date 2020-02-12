@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.androidtown.sns_project;
+package org.androidtown.sns_project.activity;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -24,6 +24,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import org.androidtown.sns_project.Camera2BasicFragment;
+import org.androidtown.sns_project.R;
 
 import java.io.File;
 import java.io.FileOutputStream;
