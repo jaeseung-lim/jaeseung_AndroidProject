@@ -42,6 +42,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 public class MemberinitActivity extends AppCompatActivity {
+
     private FirebaseAuth mAuth;
     private static final String TAG = "MemberinitActivity";// 로그찍을때 태그
     private ImageView profileImageView; // 카메라 엑티비티에서 받아온 파일의 경로를 이미지 뷰에 표시해주기

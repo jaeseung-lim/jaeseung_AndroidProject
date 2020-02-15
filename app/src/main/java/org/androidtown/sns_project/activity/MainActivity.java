@@ -6,11 +6,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -35,6 +37,40 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.logoutButton).setOnClickListener(onClickListener); // 로그아웃 버튼
 
+        BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
+
+        bottomNavigationView.setSelectedItemId(R.id.home);// res - menu - item이름
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                switch (menuItem.getItemId()){
+
+                    case R.id.dashboard :
+
+                        startActivity(new Intent(getApplicationContext(), DashBoardActivity.class));
+                        overridePendingTransition(0, 0);
+
+                        return true;
+
+                    case R.id.home :
+
+                        return true;
+
+                    case R.id.about :
+
+                        startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0, 0);
+
+                        return true;
+
+
+                }
+                return false;
+            }
+        });
+
     }
 
     @Override
@@ -43,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         Log.v(TAG, "onStart");
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인 + 현재 유저 정보 가져옴
+        Log.v(TAG, "user : "+user);
         FirebaseFirestore db = FirebaseFirestore.getInstance(); // 파이어베이스 DB 초기화
 
 
@@ -63,24 +100,28 @@ public class MainActivity extends AppCompatActivity {
             Log.v(TAG, "로그인 유저 : "+user);
             startToast("로그인 되었습니다.");
 
-            DocumentReference docRef = db.collection("Members").document(user.getUid());
+            DocumentReference docRef = db.collection("Members").document(user.getUid());//DB의 유저 아이디 값을 통해 해당 문서를 가져옴
             // 파이어 베이스 DB 참조 -- "Members"라는 collection의 user고유키값으로 파악
             docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()) {
-                        DocumentSnapshot document = task.getResult();
+
+                    if (task.isSuccessful()) { // 유저 아이디의 문서 가져오기를 성공하면
+
+                        DocumentSnapshot document = task.getResult(); // 가져온 문서의 값 넣어줌 (유저아이디의 - 닉네임,자기소개,프로필사진) key , data(introduce,name,photoUrl)
 
                         Log.d(TAG, "document = task.getResult(): " + document);
 
                         if(document!=null){ // 해당 문서의 존재가 있다면
-                            if (document.exists()) {
+
+                            if (document.exists()) { // 유저아이디의 - (닉네임,자기소개,프로필사진) key , data(introduce,name,photoUrl)가 존재 한다면 그냥 메인 엑티비에 남기기
                                 Log.d(TAG, "유저의 데이터가 있다. DocumentSnapshot data: " + document.getData());
-                            } else {
+                            } else { //없으면 회원정보 등록하는 액티비티로 이동
                                 Log.d(TAG, "유저의 데이터가 없다.");
                                 myStartActivity1(MemberinitActivity.class);
                             }
                         }
+
                     } else {
                         Log.d(TAG, "get failed with ", task.getException());
                     }
@@ -167,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 
                 case R.id.logoutButton:
 
-                    FirebaseAuth.getInstance().signOut(); // 로그아웃 함수
+                    FirebaseAuth.getInstance().signOut(); // 로그아웃 함수 ( 일반 로그인, 구글 로그인 )
 
                     myStartActivity(LoginActivity.class,1);
 
@@ -186,19 +227,22 @@ public class MainActivity extends AppCompatActivity {
 
     private void myStartActivity(Class c,int i){
 
+        if(i==1) { //i=1 로그인을 했던 경우
 
-        if(i==1) {
             Intent intent = new Intent(this, c);
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             intent.putExtra("로그아웃", 1);
             Log.v(TAG, "로그아웃!");
             startActivity(intent);
-        }else {// 현재 로그인된 유저가 없음
+
+        }else {// i=0 현재 로그인된 유저가 없음
+
             Intent intent = new Intent(this, c);
             intent.putExtra("로그아웃", 0);
             Log.v(TAG, "처음로그인!");
             //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+
         }
 
     }

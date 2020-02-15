@@ -22,6 +22,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryViewHolder> {
+
     private ArrayList<String> mDataset;
     private static final String TAG = "GalleryAdapter";// 로그찍을때 태그
     private Activity activity;
@@ -30,12 +31,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
     public static class GalleryViewHolder extends RecyclerView.ViewHolder {
+
         // each data item is just a string in this case
         public CardView cardView;
         public GalleryViewHolder(CardView v) {
             super(v);
             cardView = v;
         }
+
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)

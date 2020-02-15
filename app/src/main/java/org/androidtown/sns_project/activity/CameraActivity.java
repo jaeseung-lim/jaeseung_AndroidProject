@@ -95,12 +95,14 @@ public class CameraActivity extends AppCompatActivity {
         Log.v(TAG, "Create");
 
         if (null == savedInstanceState) {
+
             Log.v(TAG, "savedInstanceState : "+savedInstanceState);
             camera2BasicFragment=new Camera2BasicFragment();
             camera2BasicFragment.setOnImageAvailableListener(mOnImageAvailableListener);// 사진을 찍고 해당 사진을 읽어오는 리스너 --> Camera2BasicFragment 로 보내줌
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.container, camera2BasicFragment)
                     .commit();
+
         }
     }
 

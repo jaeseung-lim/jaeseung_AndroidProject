@@ -42,48 +42,44 @@ public class LoginActivity extends AppCompatActivity {
         Log.v(TAG, "onCreate 로그인 엑티비티");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        ///////////////////////////// 파이어 베이스 인증 관련 엑티비티를 띄우기 위한 것
-        // List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build(), new AuthUI.IdpConfig.GoogleBuilder().build());
-        //                new AuthUI.IdpConfig.PhoneBuilder().build(),
-        //                new AuthUI.IdpConfig.FacebookBuilder().build(),
-        //                new AuthUI.IdpConfig.TwitterBuilder().build()
-        // Create and launch sign-in intent
-        /*startActivityForResult(AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        .build(), RC_SIGN_IN);*/ // 액티비티를 호출 시켜서 setResult에 결과를 담아 onActivityResult()로 결과를 넘겨준다. (onActivityResult()에서는 결과를 확인한다.)
-        ///////////////////////////// 파이어 베이스 인증 관련 엑티비티를 띄우기 위한 것
 
         //사용자 데이터 요청해주는것
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)) // 파이어베이스에서 아이디 토큰이 필요하기때분에 아이디 토큰도 요청한다.
                 .requestEmail()
                 .build();
+        Log.v(TAG, "구글 gso : "+gso.toString());
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        Log.v(TAG, "구글 mGoogleSignInClient : "+mGoogleSignInClient.toString());
 
         mAuth = FirebaseAuth.getInstance(); // 2. 파이어 베이스 인스턴스 초기화
+        Log.v(TAG, "mAuth : "+mAuth.toString());
 
         findViewById(R.id.loginButton).setOnClickListener(onClickListener); // 로그인 버튼
         findViewById(R.id.gotoPasswordResetButton).setOnClickListener(onClickListener); // 비밀번호 재설정 버튼
         findViewById(R.id.signupButton).setOnClickListener(onClickListener);//회원가입 버튼
 
-        SignInButton signInButton = findViewById(R.id.sign_in_button);
+        SignInButton signInButton = findViewById(R.id.google_login_button);
         signInButton.setSize(SignInButton.SIZE_STANDARD); // 버튼 사이즈 조정
 
-        findViewById(R.id.sign_in_button).setOnClickListener(onClickListener);
+        findViewById(R.id.google_login_button).setOnClickListener(onClickListener);
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
         Log.v(TAG, "onStart");
         //3. 파이어 베이스 인스턴스를 초기화 할때 현재 로그인이 되어 있는지 확인
         // Check if user is signed in (non-null) and update UI accordingly.
 
-        // 현재 로그인 되어있는 사용자가 있는지 확인해줌
+
+        // 현재 로그인 되어있는 사용자가 있는지 확인해줌 (메인엑티비티에서 넘겨준 인텐트를 받아옴)///////////////////////
         Intent 메인로그아웃=getIntent();
         int 로그아웃확인=메인로그아웃.getExtras().getInt("로그아웃");
         Log.v(TAG, "onStart의 로그아웃확인 : " + 로그아웃확인);
+        // 현재 로그인 되어있는 사용자가 있는지 확인해줌 (메인엑티비티에서 넘겨준 인텐트를 받아옴)///////////////////////
+
 
         if(로그아웃확인==1) { // 로그아웃 하였다면
             //startToast("로그아웃 하셨습니다.");
@@ -91,17 +87,18 @@ public class LoginActivity extends AppCompatActivity {
         }else if (로그아웃확인 == 0){ // 로그인된 유져가 없다면
 
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this); // 마지막으로 로그인된 사용자 데이터 가져옴
+            Log.v(TAG, "onStart의 구글 account : " + account.toString());
 
             if (account != null) {
+
                 String idToken = account.getId();
-                Log.v(TAG, "onStart의 idTokem" + idToken);
+                Log.v(TAG, "onStart의 idToken" + idToken);
                 startToast("구글 로그인이 되어있습니다.");
-                finish();//
+                finish();
+
             }
 
         }
-
-
 
         //FirebaseUser currentUser = mAuth.getCurrentUser();
         //updateUI(currentUser);
@@ -140,83 +137,97 @@ public class LoginActivity extends AppCompatActivity {
     View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v){
+
             switch (v.getId()){
 
-                case R.id.sign_in_button: // 구글 로그인 버튼
+                case R.id.google_login_button: // 구글 로그인 버튼 // 주석달기 성공
+
                     Log.v(TAG, "구글 로그인 버튼 클릭");
-                    signIn();
+                    signIn(); //구글 로그인
                     break;
 
-
                 case R.id.loginButton: // 로그인 버튼 클릭
+
                     Log.v(TAG, "로그인 버튼 클릭");
                     login(); // 회원가입 버튼 클릭시 함수 실행
                     break;
 
                 case R.id.gotoPasswordResetButton: // 비밀번호 찾기 버튼 클릭
+
                     Log.v(TAG, "비번찾기 버튼 클릭");
                     myStartActivity(PasswordResetActivity.class);
-
                     break;
 
                 case R.id.signupButton: // 회원가입 버튼 클릭
+
                     Log.v(TAG, "회원가입 버튼 클릭");
                     myStartActivity(SignUpActivity.class);
-
                     break;
-
 
             }
         }
     };
 
-    private void signIn() {
+    private void signIn() {//구글 로그인
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
+        Log.v(TAG, "signIn - 구글 로그인 버튼 클릭 : "+signInIntent.toString() + "/ RC_SIGN_IN : "+RC_SIGN_IN);
+        startActivityForResult(signInIntent, RC_SIGN_IN); // 구글 로그인 액티비티로 이동하고 처리된 결과 값을 onActivityResult 로 값을 받게 된다.
+
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) { // 구글로만 로그인한것 (파이어베이스는 따로!)
+    public void onActivityResult(int requestCode, int resultCode, Intent data) { //구글 로그인을 통해 처리된 결과값을 받아서 처리하는 부분
+
         super.onActivityResult(requestCode, resultCode, data);
+
+        Log.v(TAG, "signIn - onActivityResult 시작 / requestCode : "+requestCode+"/ resultCode : "+resultCode+"/ data : "+data.toString()+"/ RC_SIGN_IN : "+RC_SIGN_IN);
 
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data); // 구글 로그인을 통해 받은 데이터를 받아옴
+
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                firebaseAuthWithGoogle(account); // firebaseAuthWithGoogle(GoogleSignInAccount acct)  여기로 값을 넘겨줌
-                String email=account.getEmail();
+                firebaseAuthWithGoogle(account); // firebaseAuthWithGoogle(GoogleSignInAccount acct)  여기로 결과 값을 넘겨줌
+                //String email=account.getEmail();
                 String idToken=account.getIdToken();
-                Log.v(TAG, idToken);
+
+                Log.v(TAG, "idToken : "+idToken);
 
             } catch (ApiException e) {
-                // Google Sign In failed, update UI appropriately
+
                 Log.v(TAG, "Google sign in failed", e);
                 startToast("구글 로그인에 실패하였습니다.");
-                // ...
+
             }
+
         }
+
     }
 
-    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) { // 구글 로그인에서 idToken을 받아와서 파이어베이스에 넘겨줘야한다.
-        Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+    private void firebaseAuthWithGoogle(GoogleSignInAccount acct) { // (onActivityResult를 통해 받은 결과값 처리해주는 함수)구글 로그인에서 idToken을 받아와서 파이어베이스에 넘겨줘야한다.
 
-        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
+        Log.d(TAG, "firebaseAuthWithGoogle : " + acct.getId());
+        AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null); // 아이디 값을 잘 받아왔는지 확인해주는 함수
+
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+
+                        if (task.isSuccessful()) { // 받아온 결과값이 성공적인지 확인
+
                             // Sign in success, update UI with the signed-in user's information
-                            Log.v(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            finish();// 구글로그인 정보가 파이어베이스로 넘어가면 로그인 성공으로 간주하여 LoginActivity를 닫아준다.
+                            Log.v(TAG, "signInWithCredential:success ");
+                            FirebaseUser user = mAuth.getCurrentUser();//mAuth에 현재 사용자를 구글 아이디로 보여줌
+                            finish();// 구글로그인 정보가 파이어베이스로 넘어가면 로그인 성공으로 간주하여 LoginActivity를 닫아준다. 메인 엑티비티로 이동
 
                             String uid = user.getUid(); // 여기로 uid가 넘어오면 파이어베이스에 구글 로그인 정보가 들어간 것!
                         } else {
                             // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            Log.v(TAG, "signInWithCredential:failure", task.getException());
                             startToast("구글 로그인의 정보가 파이어베이스에 들어가기를 실패하였습니다.");
                             //Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
                             //updateUI(null);
@@ -225,6 +236,7 @@ public class LoginActivity extends AppCompatActivity {
                         // ...
                     }
                 });
+
     }
 
     private void login(){ // 회원 가입 함수 (회원가입할때 이메일,비밀번호 사용가능한지 확인)
@@ -235,7 +247,7 @@ public class LoginActivity extends AppCompatActivity {
 
         Log.v(TAG, "email : "+email+" password : "+password);
 
-        if(email.length()>0 && password.length()>0){
+        if(email.length()>0 && password.length()>0){ // 로그인 정보 입력 (email,password 값 입력을 했는지 확인)
 
             mAuth.signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -244,7 +256,8 @@ public class LoginActivity extends AppCompatActivity {
                             Log.v(TAG, "task.isSuccessful() "+task.isSuccessful());
                             if (task.isSuccessful()) {
 
-                                FirebaseUser user = mAuth.getCurrentUser();
+                                FirebaseUser user = mAuth.getCurrentUser(); // 현재 사용자를 유저 값에 넣어줌
+                                Log.v(TAG, "login() - user : "+user);
                                 startToast("로그인에 성공하였습니다.");
                                 myStartActivity(MainActivity.class);
 

@@ -20,7 +20,7 @@
     <org.androidtown.sns_project.fragment.AutoFitTextureView
         android:id="@+id/texture"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignBottom="@+id/control"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"

@@ -9,45 +9,38 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.ProfileActivity"></activity>
+        <activity android:name=".activity.DashBoardActivity" />
+        <activity android:name=".activity.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
 
-            <activity android:name=".activity.MainActivity">
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
-                    <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>
-                <intent-filter>
-                    <action android:name="android.intent.action.VIEW" />
-
-                    <category android:name="android.intent.category.DEFAULT" />
-                    <category android:name="android.intent.category.BROWSABLE" />
-
-                    <data
-                        android:host="google.com"
-                        android:scheme="http" />
-                </intent-filter>
-            </activity>
-
+                <data
+                    android:host="google.com"
+                    android:scheme="http" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activity.LoginActivity" />
-
         <activity android:name=".activity.SignUpActivity" />
-
         <activity android:name=".activity.PasswordResetActivity" />
-
         <activity android:name=".activity.MemberinitActivity" />
-
         <activity android:name=".activity.CameraActivity" />
-
-        <activity android:name=".activity.GalleryActivity"/>
-
-
+        <activity android:name=".activity.GalleryActivity" />
     </application>
-
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
     <uses-feature android:name="android.hardware.camera" />
+
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
 
 </manifest>

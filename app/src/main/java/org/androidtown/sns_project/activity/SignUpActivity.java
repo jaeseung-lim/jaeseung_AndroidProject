@@ -107,9 +107,7 @@ private static final String TAG = "SignUpActivity";// 로그찍을때 태그
                         .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
                             @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-
+                            public void onComplete(@NonNull Task<AuthResult> task) { // 파이어 베이스로 회원가입 정보를 보내줌 email,password
 
                                 Log.d(TAG, "onComplete 함수 실행");
 
