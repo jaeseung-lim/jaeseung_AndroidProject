@@ -93,7 +93,7 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         Log.v(TAG, "Create");
-
+        ////////////////////////////////////////////////////////////////////////////////////////////
         if (null == savedInstanceState) {
 
             Log.v(TAG, "savedInstanceState : "+savedInstanceState);
@@ -104,6 +104,7 @@ public class CameraActivity extends AppCompatActivity {
                     .commit();
 
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     @Override

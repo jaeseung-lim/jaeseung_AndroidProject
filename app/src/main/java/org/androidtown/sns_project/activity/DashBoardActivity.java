@@ -23,10 +23,10 @@ public class DashBoardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dash_board);
 
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-
         bottomNavigationView.setSelectedItemId(R.id.dashboard);// res - menu - item이름
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -58,9 +58,9 @@ public class DashBoardActivity extends AppCompatActivity {
                 return false;
             }
         });
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    }
+    }//onCreate
 
     @Override
     protected void onStart() {

@@ -30,6 +30,8 @@ public class GalleryActivity extends AppCompatActivity {
         Log.v(TAG, "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_gallery);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
         recyclerView = (RecyclerView) findViewById(R.id.gallery_recyclerview);
 
         // use this setting to improve performance if you know that changes
@@ -48,7 +50,8 @@ public class GalleryActivity extends AppCompatActivity {
         //어댑터
         mAdapter = new GalleryAdapter(this,getImagesPath(this));
         recyclerView.setAdapter(mAdapter);
-    }
+        ////////////////////////////////////////////////////////////////////////////////////////////
+    }//onCreate
 
 
     public static ArrayList<String> getImagesPath(Activity activity) { // 앨범 리스트에서 사진 받아오기

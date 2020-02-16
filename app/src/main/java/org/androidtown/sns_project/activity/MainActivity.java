@@ -37,10 +37,9 @@ public class MainActivity extends AppCompatActivity {
 
         findViewById(R.id.logoutButton).setOnClickListener(onClickListener); // 로그아웃 버튼
 
+        ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-
         bottomNavigationView.setSelectedItemId(R.id.home);// res - menu - item이름
-
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -70,8 +69,9 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+        ////////////////////////////////////////////////////////////////////////////////////////////
 
-    }
+    }//onCreate
 
     @Override
     protected void onStart() {

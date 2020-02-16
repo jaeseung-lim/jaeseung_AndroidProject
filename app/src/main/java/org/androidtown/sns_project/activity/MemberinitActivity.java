@@ -245,6 +245,7 @@ public class MemberinitActivity extends AppCompatActivity {
         Log.v(TAG, "profile_name : "+profile_name);
 
         if(profile_name.length()>0){ // 프로필 정보를 업데이트 하였다면
+
             FirebaseStorage storage = FirebaseStorage.getInstance();
 
             // Create a storage reference from our app
@@ -256,12 +257,15 @@ public class MemberinitActivity extends AppCompatActivity {
             user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인 + 현재 유저 정보 가져옴
 
             // Create a reference to 'images/mountains.jpg'
-            final StorageReference mountainImagesRef = storageRef.child("members/"+user.getUid()+"/profileimage.jpg");
+            final StorageReference mountainImagesRef = storageRef.child("members/"+user.getUid()+"/profileimage.jpg"); //storage
 
             if(profilePath == null){ // 사진이 없다면 그냥 올리고
+
                 Memberinfo memberInfo = new Memberinfo(profile_name,profile_introduce);
                 uploader(memberInfo);
+
             }else{ // 사진이 있다면 다같이 올려라
+
                 try{
                     InputStream stream = new FileInputStream(new File(profilePath));
                     UploadTask uploadTask = mountainImagesRef.putStream(stream);
