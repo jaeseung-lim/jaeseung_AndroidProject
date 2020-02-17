@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView MyprofileImage;
     private TextView MyprofileName;
     private TextView MyprofileIntroduce;
+    private Button profile_edit_button;
     private DocumentSnapshot document;
 
     @Override
@@ -56,10 +58,13 @@ public class ProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+
         MyprofileImage= findViewById(R.id.Myprofile_image);
         MyprofileName=findViewById(R.id.Myprofile_name);
         MyprofileIntroduce=findViewById(R.id.Myprofile_introduce);
+        profile_edit_button=findViewById(R.id.Profile_edit_button);
 
+        profile_edit_button.setOnClickListener(onClickListener); // 로그인 버튼
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         db=FirebaseFirestore.getInstance();
@@ -102,6 +107,7 @@ public class ProfileActivity extends AppCompatActivity {
                     // Glide 이용하여 이미지뷰에 로딩
                     Glide.with(ProfileActivity.this)
                             .load(task.getResult())
+                            .thumbnail(0.01f)
                             .centerCrop()
                             .override(400)
                             .into(MyprofileImage);
@@ -195,8 +201,9 @@ public class ProfileActivity extends AppCompatActivity {
         public void onClick(View v){
             switch (v.getId()){
 
-                case R.id.sendPasswordButton:
+                case R.id.profile_edit_button:
                     Log.v(TAG, "비번 찾기 버튼 누름");
+                    myStartActivity(MemberinitActivity.class);
 
                     break;
 
