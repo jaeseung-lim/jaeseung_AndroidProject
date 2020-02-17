@@ -16,6 +16,8 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_margin="30dp"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="56dp"
             android:src="@mipmap/ic_launcher_round"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -38,7 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#00FFFFFF"
+                android:background="#FFC107"
                 android:text="프로필 수정                                    >        "
                 android:textAlignment="viewStart"
                 android:textSize="25sp" />
@@ -48,8 +50,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#00FFFFFF"
-                android:text="설정                                                 >"
+                android:background="#FFC107"
+                android:text="알림 설정                                        > "
                 android:textAlignment="viewStart"
                 android:textSize="25sp" />
 
@@ -58,8 +60,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#00FFFFFF"
-                android:text="설정                                                 >"
+                android:background="#FFC107"
+                android:text="공지 사항                                        >"
                 android:textAlignment="viewStart"
                 android:textSize="25sp" />
 
@@ -68,18 +70,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#00FFFFFF"
-                android:text="설정                                                 >"
+                android:background="#FFC107"
+                android:text="약관 및 정책                                   >"
                 android:textAlignment="viewStart"
                 android:textSize="25sp" />
 
             <Button
-                android:id="@+id/button18"
+                android:id="@+id/logoutButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                android:background="#00FFFFFF"
-                android:text="설정                                                 >"
+                android:background="#FFC107"
+                android:text="로그아웃                                         >"
                 android:textAlignment="viewStart"
                 android:textSize="25sp" />
 

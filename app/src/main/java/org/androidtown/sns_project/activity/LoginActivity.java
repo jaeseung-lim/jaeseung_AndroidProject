@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //사용자 데이터 요청해주는것
+        //구글 사용자 데이터 요청해주는것
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)) // 파이어베이스에서 아이디 토큰이 필요하기때분에 아이디 토큰도 요청한다.
                 .requestEmail()
@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
         }else if (로그아웃확인 == 0){ // 로그인된 유져가 없다면
 
             GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this); // 마지막으로 로그인된 사용자 데이터 가져옴
-            Log.v(TAG, "onStart의 구글 account : " + account.toString());
+            //Log.v(TAG, "onStart의 구글 account : " + account.toString());
 
             if (account != null) {
 
@@ -219,6 +219,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         if (task.isSuccessful()) { // 받아온 결과값이 성공적인지 확인
 
+                            //쉐어드 이용하여 구글 로그인한 경우 식별자 넣어주기
                             // Sign in success, update UI with the signed-in user's information
                             Log.v(TAG, "signInWithCredential:success ");
                             FirebaseUser user = mAuth.getCurrentUser();//mAuth에 현재 사용자를 구글 아이디로 보여줌

@@ -35,8 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
         Log.v(TAG, "onCreate");
 
-        findViewById(R.id.logoutButton).setOnClickListener(onClickListener); // 로그아웃 버튼
-
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
         bottomNavigationView.setSelectedItemId(R.id.home);// res - menu - item이름
@@ -169,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         Log.v(TAG, "onResume/ MainActivity 보임");
-        findViewById(R.id.logoutButton).setOnClickListener(onClickListener);
+        //findViewById(R.id.logoutButton).setOnClickListener(onClickListener);
     }
 
     @Override
@@ -206,11 +204,7 @@ public class MainActivity extends AppCompatActivity {
 
             switch (v.getId()){
 
-                case R.id.logoutButton:
-
-                    FirebaseAuth.getInstance().signOut(); // 로그아웃 함수 ( 일반 로그인, 구글 로그인 )
-
-                    myStartActivity(LoginActivity.class,1);
+                case 1:
 
                     break;
             }

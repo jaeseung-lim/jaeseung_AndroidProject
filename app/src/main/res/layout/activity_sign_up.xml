@@ -71,15 +71,6 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <Button
-                android:id="@+id/signUpConfirmButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_weight="1"
-                android:background="#E91E63"
-                android:text="회원가입" />
-
-            <Button
                 android:id="@+id/gotoLoginButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -87,6 +78,15 @@
                 android:layout_weight="1"
                 android:background="#C0C0C0"
                 android:text="로그인" />
+
+            <Button
+                android:id="@+id/signUpConfirmButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_weight="1"
+                android:background="#FF9800"
+                android:text="회원가입" />
 
         </LinearLayout>
 

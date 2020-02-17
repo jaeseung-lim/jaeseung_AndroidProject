@@ -49,6 +49,7 @@ public class MemberinitActivity extends AppCompatActivity {
     private String profilePath; // 파일의 경로를 받아주는 변수
     private FirebaseUser user;
     //private Activity activity;
+    private CardView cardView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //일반 로그인 되어있을때 회원정보 입력
@@ -136,7 +137,7 @@ public class MemberinitActivity extends AppCompatActivity {
 
                 case R.id.profileimageView:  //프로필 이미지 클릭시 (카메라 , 갤러리 버튼 보여지는 유무)
 
-                    CardView cardView = findViewById(R.id.buttonsCardView);
+                    cardView = findViewById(R.id.buttonsCardView);
 
 
                     if(cardView.getVisibility()==View.VISIBLE){ // 만약 카드뷰가 보인다면
@@ -161,11 +162,16 @@ public class MemberinitActivity extends AppCompatActivity {
 
                 case R.id.picture_button: // 사진촬영 버튼
 
+
+                    cardView.setVisibility(View.GONE);
                     myStartActivity(CameraActivity.class); // 넘겨주는 값을 startActivityForResult를 통해 받아옴
+
 
                     break;
 
                 case R.id.gallery_button: // 갤러리 버튼
+
+                    cardView.setVisibility(View.GONE);
 
                     // Here, thisActivity is the current activity
                     if (ContextCompat.checkSelfPermission(MemberinitActivity.this,

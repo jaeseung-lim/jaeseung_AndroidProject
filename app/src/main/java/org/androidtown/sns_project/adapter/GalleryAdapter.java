@@ -86,7 +86,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
         Log.v(TAG, "profilePath : " + mDataset.get(position));
         //Bitmap bmp= BitmapFactory.decodeFile(mDataset.get(position));
         //item_gallery_imageView.setImageBitmap(bmp);
-        Glide.with(activity).load(mDataset.get(position)).centerCrop().override(840).into(item_gallery_imageView); // 이미지 보정하여 보여주는 라이브러리  (이미지 로딩 )
+        Glide.with(activity).load(mDataset.get(position)).centerCrop().thumbnail(0.1f).override(840).into(item_gallery_imageView); // 이미지 보정하여 보여주는 라이브러리  (이미지 로딩 )
 
     }
 

@@ -9,8 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.ProfileActivity"></activity>
-        <activity android:name=".activity.DashBoardActivity" />
+
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,6 +33,8 @@
         <activity android:name=".activity.MemberinitActivity" />
         <activity android:name=".activity.CameraActivity" />
         <activity android:name=".activity.GalleryActivity" />
+        <activity android:name=".activity.ProfileActivity"/>
+        <activity android:name=".activity.DashBoardActivity" />
     </application>
     <uses-feature android:name="android.hardware.camera" />
 
