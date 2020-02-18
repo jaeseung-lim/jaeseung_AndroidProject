@@ -34,6 +34,8 @@ dependencies {
 //
     //implementation 'com.firebaseui:firebase-ui-auth:4.3.1' // 파이어베이스 전용 ui 제공툴
 
+    implementation 'com.github.mohammadatif:CircularImageView:1.0.0' //
+
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test:runner:1.2.0'
@@ -45,6 +47,8 @@ dependencies {
     // Skip this if you don't want to use integration libraries or configure Glide.
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation 'com.google.android.material:material:1.1.0'
+
+    implementation 'com.squareup.picasso:picasso:2.71828'
 }
 
 apply plugin: 'com.google.gms.google-services'

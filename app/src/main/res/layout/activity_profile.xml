@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="#FFC107"
-                android:text="프로필 수정                                    >        "
+                android:text="프로필 수정                                    >"
                 android:textAlignment="viewStart"
                 android:textSize="25sp" />
 
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
                 android:background="#FFC107"
-                android:text="알림 설정                                        > "
+                android:text="알림 설정                                        >"
                 android:textAlignment="viewStart"
                 android:textSize="25sp" />
 
@@ -121,6 +121,7 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorWhite"
             app:itemBackground="@color/colorWhite"
             app:itemIconTint="@drawable/selector"
             app:itemTextColor="@drawable/selector"

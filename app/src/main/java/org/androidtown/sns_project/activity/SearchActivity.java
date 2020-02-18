@@ -14,41 +14,48 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.androidtown.sns_project.R;
 
-public class DashBoardActivity extends AppCompatActivity {
+public class SearchActivity extends AppCompatActivity {
 
     private static final String TAG = "ProfileActivity";// 로그찍을때 태그
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dash_board);
+        setContentView(R.layout.activity_search);
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.dashboard);// res - menu - item이름
+        bottomNavigationView.setSelectedItemId(R.id.search_navi);// res - menu - item이름
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                 switch (menuItem.getItemId()){
 
-                    case R.id.dashboard :
+                    case R.id.search_navi :
 
 
 
                         return true;
 
-                    case R.id.home :
+                    case R.id.home_navi :
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         overridePendingTransition(0, 0);
 
                         return true;
 
-                    case R.id.about :
+                    case R.id.profile_navi :
 
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0, 0);
+
+                        return true;
+
+                    case R.id.chatting_navi:
+
+                        startActivity(new Intent(getApplicationContext(), ChattingActivity.class));
                         overridePendingTransition(0, 0);
 
                         return true;

@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 import org.androidtown.sns_project.R;
 
@@ -32,32 +35,38 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Log.v(TAG, "onCreate");
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.home);// res - menu - item이름
+        bottomNavigationView.setSelectedItemId(R.id.home_navi);// res - menu - item이름
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                 switch (menuItem.getItemId()){
 
-                    case R.id.dashboard :
+                    case R.id.search_navi :
 
-                        startActivity(new Intent(getApplicationContext(), DashBoardActivity.class));
+                        startActivity(new Intent(getApplicationContext(), SearchActivity.class));
                         overridePendingTransition(0, 0);
 
                         return true;
 
-                    case R.id.home :
+                    case R.id.home_navi :
 
                         return true;
 
-                    case R.id.about :
+                    case R.id.profile_navi :
 
                         startActivity(new Intent(getApplicationContext(), ProfileActivity.class));
+                        overridePendingTransition(0, 0);
+
+                        return true;
+
+                    case R.id.chatting_navi:
+
+                        startActivity(new Intent(getApplicationContext(), ChattingActivity.class));
                         overridePendingTransition(0, 0);
 
                         return true;

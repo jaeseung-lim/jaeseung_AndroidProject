@@ -95,5 +95,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.GalleryV
     public int getItemCount() {
         return mDataset.size();
     }
+
+
 }
 

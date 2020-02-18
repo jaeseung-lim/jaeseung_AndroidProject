@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardUseCompatPadding="true"
+    app:cardCornerRadius="2dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/colorWhite"
+    app:contentPadding="3dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <com.blogspot.atifsoftwares.circularimageview.CircularImageView
+            android:id="@+id/members_CircularImageView"
+            android:src="@drawable/unnamed"
+            android:layout_width="70dp"
+            android:layout_height="70dp"/>
+        
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/members_name_TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="닉네임"
+                android:textSize="25sp"
+                android:textColor="@color/cardview_shadow_start_color"/>
+
+            <TextView
+                android:id="@+id/members_introduce_TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="자기소개"
+                android:textSize="15sp"
+                android:textColor="@color/cardview_shadow_start_color"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -245,6 +245,9 @@ public class MemberinitActivity extends AppCompatActivity {
         //프로필 사진을 받아올때 핸드폰에 저장되어 있는 경로에서 해당 이미지를 가져와야 한다.
         Log.v(TAG, "프로필 업데이트 함수 실행");
 
+        user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인 + 현재 유저 정보 가져옴
+
+        final String profile_uid=user.getUid();
         final String profile_name=((EditText)findViewById(R.id.profile_name)).getText().toString(); // 프로필 입력창에 이름 입력된 값을 받아오는 작업
         final String profile_introduce=((EditText)findViewById(R.id.profile_introduce)).getText().toString();
 
@@ -260,7 +263,7 @@ public class MemberinitActivity extends AppCompatActivity {
             // Create a reference to "mountains.jpg"
             //StorageReference mountainsRef = storageRef.child("mountains.jpg");
 
-            user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인 + 현재 유저 정보 가져옴
+
 
             // Create a reference to 'images/mountains.jpg'
             final StorageReference mountainImagesRef = storageRef.child("members/"+user.getUid()+"/profileimage.jpg"); //storage
@@ -293,7 +296,7 @@ public class MemberinitActivity extends AppCompatActivity {
                             if (task.isSuccessful()) {
                                 Uri downloadUri = task.getResult();
 
-                                Memberinfo memberInfo = new Memberinfo(profile_name,profile_introduce,downloadUri.toString());
+                                Memberinfo memberInfo = new Memberinfo(profile_name,profile_introduce,downloadUri.toString(),profile_uid);
                                 uploader(memberInfo);
                                 Log.v(TAG, "Storage로 사진 업로드 성공" + downloadUri);
 
