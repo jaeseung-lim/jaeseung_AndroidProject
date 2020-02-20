@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 //import com.firebase.ui.auth.AuthUI;
@@ -34,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth; //1. 파이어 베이스 인스턴스 생성
     private static final int RC_SIGN_IN=1;
     private GoogleSignInClient mGoogleSignInClient;
+    private RelativeLayout loaderLayout_googlelogin;
 
 
 
@@ -169,6 +171,10 @@ public class LoginActivity extends AppCompatActivity {
     };
 
     private void signIn() {//구글 로그인
+
+        loaderLayout_googlelogin=findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+        loaderLayout_googlelogin.setVisibility(View.VISIBLE); //로딩 화면 보여주기
+
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         Log.v(TAG, "signIn - 구글 로그인 버튼 클릭 : "+signInIntent.toString() + "/ RC_SIGN_IN : "+RC_SIGN_IN);
         startActivityForResult(signInIntent, RC_SIGN_IN); // 구글 로그인 액티비티로 이동하고 처리된 결과 값을 onActivityResult 로 값을 받게 된다.
@@ -195,8 +201,10 @@ public class LoginActivity extends AppCompatActivity {
                 String idToken=account.getIdToken();
 
                 Log.v(TAG, "idToken : "+idToken);
+                loaderLayout_googlelogin.setVisibility(View.GONE); //로딩 화면 끄기
 
             } catch (ApiException e) {
+                loaderLayout_googlelogin.setVisibility(View.GONE); //로딩 화면 끄기
 
                 Log.v(TAG, "Google sign in failed", e);
                 startToast("구글 로그인에 실패하였습니다.");
@@ -243,6 +251,9 @@ public class LoginActivity extends AppCompatActivity {
     private void login(){ // 회원 가입 함수 (회원가입할때 이메일,비밀번호 사용가능한지 확인)
         Log.v(TAG, "로그인 함수 실행");
 
+        final RelativeLayout loaderLayout_login=findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+        loaderLayout_login.setVisibility(View.VISIBLE); //로딩 화면 보여주기
+
         String email=((EditText)findViewById(R.id.emailEditText)).getText().toString(); // 이메일 입력창에 입력된 값을 받아오는 작업
         String password=((EditText)findViewById(R.id.passwordEditText)).getText().toString();// 비밀번호 입력창에 입력된 값을 받아오는 작업
 
@@ -260,6 +271,7 @@ public class LoginActivity extends AppCompatActivity {
                                 FirebaseUser user = mAuth.getCurrentUser(); // 현재 사용자를 유저 값에 넣어줌
                                 Log.v(TAG, "login() - user : "+user);
                                 startToast("로그인에 성공하였습니다.");
+                                loaderLayout_login.setVisibility(View.GONE);// 로그인 성공하면 로그인 화면 없애주기
                                 myStartActivity(MainActivity.class);
 
                             } else if(task.isSuccessful()!=true){

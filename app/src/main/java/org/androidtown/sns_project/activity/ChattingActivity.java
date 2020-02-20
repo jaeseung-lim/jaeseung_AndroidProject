@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,6 +40,7 @@ public class ChattingActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private MemberInfoAdapter memberInfoAdapter;
     private List<Memberinfo> memberinfoList;
+    private RelativeLayout loaderLayout_memberlist;
 
     private FirebaseFirestore db;
     private DocumentSnapshot document;
@@ -49,6 +51,8 @@ public class ChattingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_chatting);
         Log.v(TAG, "onCreate");
 
+        loaderLayout_memberlist =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+        loaderLayout_memberlist.setVisibility(View.VISIBLE); //로딩 화면 보여주기
 
         recyclerView= findViewById(R.id.members_chatting_recyclerview);
 
@@ -58,8 +62,6 @@ public class ChattingActivity extends AppCompatActivity {
         
         getAllUsers();
         
-        
-
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
@@ -133,44 +135,11 @@ public class ChattingActivity extends AppCompatActivity {
 
                                 memberinfoList.add(memberinfo);
 
-                                /*DocumentReference docRef = db.collection("Members").document(documentSnapshot.getId());
-
-                                docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                                        if (task.isSuccessful()) {
-
-                                            document = task.getResult();
-                                            if (document.exists()) {
-
-                                                Log.v(TAG, "DocumentSnapshot data: " + document.getData());
-                                                String uid= (String) document.getData().get("memberUid");
-                                                String url= (String) document.getData().get("photoUrl");
-                                                String intro= (String) document.getData().get("introduce");
-                                                String name= (String) document.getData().get("name");
-
-                                                Memberinfo memberinfo=new Memberinfo(uid,url,intro,name);
-
-                                                Log.v(TAG, "document.getData().get(\"memberUid\") : " + document.getData().get("memberUid"));
-                                                Log.v(TAG, "document.getData().get(\"photoUrl\") : " + document.getData().get("photoUrl"));
-                                                Log.v(TAG, "document.getData().get(\"introduce\") : " + document.getData().get("introduce"));
-                                                Log.v(TAG, "document.getData().get(\"name\") : " + document.getData().get("name"));
-
-                                                memberinfoList.add(memberinfo);
-
-                                            } else {
-                                                Log.v(TAG, "No such document");
-                                            }
-                                        } else {
-                                            Log.v(TAG, "get failed with ", task.getException());
-                                        }
-                                    }
-                                });*/
-
                             }
                             Log.v(TAG, "데이터 불러오기 반복문 끝! ");
                             memberInfoAdapter = new MemberInfoAdapter(ChattingActivity.this, memberinfoList);
                             recyclerView.setAdapter(memberInfoAdapter);
+                            loaderLayout_memberlist.setVisibility(View.GONE); //로딩 화면 보여주기
                         } else {
                             Log.v(TAG, "Error getting documents: ", task.getException());
                         }

@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,10 +46,13 @@ public class ProfileActivity extends AppCompatActivity {
     private Button profile_edit_button;
     private DocumentSnapshot document;
 
+    private RelativeLayout loaderLayout_profile;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+        Log.v(TAG, "onCreate()");
 
 
         MyprofileImage= findViewById(R.id.Myprofile_image);
@@ -61,6 +65,19 @@ public class ProfileActivity extends AppCompatActivity {
 
         user = FirebaseAuth.getInstance().getCurrentUser();
         db=FirebaseFirestore.getInstance();
+
+        loaderLayout_profile =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+        loaderLayout_profile.setVisibility(View.VISIBLE); //로딩 화면 보여주기
+
+
+
+        Log.v(TAG, "user : "+user);
+
+        Log.v(TAG, "db : "+db);
+
+        Log.v(TAG, "user.getUid() : " + user.getUid());
+
+        Log.v(TAG, "user.getUid() : " + user.getUid());
 
         DocumentReference docRef = db.collection("Members").document(user.getUid());
 
@@ -79,6 +96,7 @@ public class ProfileActivity extends AppCompatActivity {
                         Log.v(TAG, "document.getData().get(\"name\") : " + document.getData().get("name"));
                         MyprofileIntroduce.setText((CharSequence) document.getData().get("introduce"));
                         MyprofileName.setText((CharSequence) document.getData().get("name"));
+
 
                     } else {
                         Log.v(TAG, "No such document");
@@ -104,9 +122,11 @@ public class ProfileActivity extends AppCompatActivity {
                             .centerCrop()
                             .override(400)
                             .into(MyprofileImage);
+                    loaderLayout_profile.setVisibility(View.GONE); //로딩 화면 보여주기
                     //Glide.with(this).load(bmp).centerCrop().override(400).into(profileImageView);
                 } else {
                     // URL을 가져오지 못하면 토스트 메세지
+                    loaderLayout_profile.setVisibility(View.GONE); //로딩 화면 보여주기
                     Toast.makeText(ProfileActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
@@ -169,6 +189,9 @@ public class ProfileActivity extends AppCompatActivity {
         super.onRestart();
         Log.v(TAG, "onRestart");
 
+        loaderLayout_profile =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+        loaderLayout_profile.setVisibility(View.VISIBLE); //로딩 화면 보여주기
+
         user = FirebaseAuth.getInstance().getCurrentUser();
         db=FirebaseFirestore.getInstance();
 
@@ -215,9 +238,11 @@ public class ProfileActivity extends AppCompatActivity {
                             .override(400)
                             .into(MyprofileImage);
                     //Glide.with(this).load(bmp).centerCrop().override(400).into(profileImageView);
+                    loaderLayout_profile.setVisibility(View.GONE); //로딩 화면 보여주기
                 } else {
                     // URL을 가져오지 못하면 토스트 메세지
                     Toast.makeText(ProfileActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    loaderLayout_profile.setVisibility(View.GONE); //로딩 화면 보여주기
                 }
             }
         });
@@ -257,13 +282,15 @@ public class ProfileActivity extends AppCompatActivity {
             switch (v.getId()){
 
                 case R.id.Profile_edit_button:
-                    Log.v(TAG, "비번 찾기 버튼 누름");
+                    Log.v(TAG, "프로필 수정 버튼 누름");
                     myStartActivity(MemberinitActivity.class);
 
                     break;
 
+
                 case R.id.logoutButton:
 
+                    Log.v(TAG, "로그아웃 버튼 누름");
                     FirebaseAuth.getInstance().signOut(); // 로그아웃 함수 ( 일반 로그인, 구글 로그인 )
 
                     myStartActivity1(LoginActivity.class,1);

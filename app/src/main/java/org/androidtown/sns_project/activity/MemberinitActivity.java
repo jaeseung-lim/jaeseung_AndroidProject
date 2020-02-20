@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -50,6 +51,8 @@ public class MemberinitActivity extends AppCompatActivity {
     private FirebaseUser user;
     //private Activity activity;
     private CardView cardView;
+    private RelativeLayout loaderLayout_memberinit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) { //일반 로그인 되어있을때 회원정보 입력
@@ -57,6 +60,7 @@ public class MemberinitActivity extends AppCompatActivity {
         setContentView(R.layout.activity_member_init);
 
         mAuth= FirebaseAuth.getInstance();
+
 
         profileImageView=findViewById(R.id.profileimageView);// 프로필 사진 선택 버튼
         profileImageView.setOnClickListener(onClickListener);// 프로필 사진 선택 버튼
@@ -154,7 +158,9 @@ public class MemberinitActivity extends AppCompatActivity {
 
                     break;
 
-                case R.id.profileUpdateButton:
+                case R.id.profileUpdateButton: // 회원정보 제출 버튼
+                    loaderLayout_memberinit =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+                    loaderLayout_memberinit.setVisibility(View.VISIBLE); //로딩 화면 보여주기
 
                     profileUpdate();
 
@@ -298,17 +304,20 @@ public class MemberinitActivity extends AppCompatActivity {
 
                                 Memberinfo memberInfo = new Memberinfo(profile_name,profile_introduce,downloadUri.toString(),profile_uid);
                                 uploader(memberInfo);
+                                loaderLayout_memberinit.setVisibility(View.GONE); //로딩 화면 보여주기
                                 Log.v(TAG, "Storage로 사진 업로드 성공" + downloadUri);
 
                             } else {
                                 // Handle failures
                                 // ...
+                                loaderLayout_memberinit.setVisibility(View.GONE); //로딩 화면 보여주기
                                 Log.v(TAG, "Storage로 사진 업로드 실패 ");
                             }
                         }
                     });
 
                 }catch (FileNotFoundException e){
+                    loaderLayout_memberinit.setVisibility(View.GONE); //로딩 화면 보여주기
                     Log.v(TAG,"에러 : "+e.toString());
                 }
             }

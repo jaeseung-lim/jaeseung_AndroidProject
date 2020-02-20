@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +22,7 @@ public class PasswordResetActivity extends AppCompatActivity {
     private static final String TAG = "PasswordResetActivity";// 로그찍을때 태그
 
     private FirebaseAuth mAuth; //1. 파이어 베이스 인스턴스 생성
+    private RelativeLayout loaderLayout_passwordreset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +81,8 @@ public class PasswordResetActivity extends AppCompatActivity {
 
                 case R.id.sendPasswordButton:
                     Log.v(TAG, "비번 찾기 버튼 누름");
+                    loaderLayout_passwordreset =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+                    loaderLayout_passwordreset.setVisibility(View.VISIBLE); //로딩 화면 보여주기
                  sendPassword();
                     break;
 
@@ -104,9 +108,11 @@ public class PasswordResetActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 //Log.d(TAG, "Email sent.");
+                                loaderLayout_passwordreset.setVisibility(View.GONE); //로딩 화면 보여주기
                                 startToast("비밀번호 재설정 이메일이 발송되었습니다.");
                                 finish(); // SignUpActivity 화면 종료
                             }else if(task.isSuccessful()!=true){
+                                loaderLayout_passwordreset.setVisibility(View.GONE); //로딩 화면 보여주기
                                 startToast("유효하지 않는 이메일 입니다.");
                             }
                         }

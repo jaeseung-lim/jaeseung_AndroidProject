@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -19,8 +20,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class SignUpActivity extends AppCompatActivity {
-private static final String TAG = "SignUpActivity";// 로그찍을때 태그
+
+    private static final String TAG = "SignUpActivity";// 로그찍을때 태그
     private FirebaseAuth mAuth; //1. 파이어 베이스 인스턴스 생성
+    private RelativeLayout loaderLayout_signup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,8 @@ private static final String TAG = "SignUpActivity";// 로그찍을때 태그
 
         findViewById(R.id.signUpConfirmButton).setOnClickListener(onClickListener); // 회원가입 버튼
         findViewById(R.id.gotoLoginButton).setOnClickListener(onClickListener); // 로그인 버튼
+
+
     }
 
     @Override
@@ -79,7 +84,10 @@ private static final String TAG = "SignUpActivity";// 로그찍을때 태그
 
                 case R.id.signUpConfirmButton: // 회원가입 버튼
                     Log.v(TAG, "회원가입 버튼 클릭");
+                    loaderLayout_signup =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+                    loaderLayout_signup.setVisibility(View.VISIBLE); //로딩 화면 보여주기
                     signUp(); // 회원가입 버튼 클릭시 함수 실행
+
                     break;
 
                 case R.id.gotoLoginButton: // 로그인 페이지로 이동 버튼
@@ -117,7 +125,7 @@ private static final String TAG = "SignUpActivity";// 로그찍을때 태그
                                     //Log.d(TAG, "회원가입성공");
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     startToast("회원가입에 성공하였습니다.");
-
+                                    loaderLayout_signup.setVisibility(View.GONE); //로딩 화면 보여주기
                                     finish(); // signUpActivity종료
 
                                     //Toast.makeText(this, "회원가입을 성공했습니다. ", Toast.LENGTH_SHORT).show();
@@ -126,13 +134,16 @@ private static final String TAG = "SignUpActivity";// 로그찍을때 태그
                                     // If sign in fails, display a message to the user.
                                     //Log.w(TAG, "회원가입 실패 ", task.getException());
                                     Log.d(TAG, "회원가입 실패시 (task.isSuccessful) : "+task.isSuccessful());
+                                    loaderLayout_signup.setVisibility(View.GONE); //로딩 화면 보여주기
 
                                     if(task.getException() != null){//아무것도 입력하지 않았을때; + 형식에 맞지 않았을때 오류문자를 보내줌
                                         Log.d(TAG, "회원가입 실패시 (task.getException : "+task.getException());
                                         startToast(task.getException().toString());
                                         startToast("비밀번호를 6자리 이상 입력해주세요.");
+                                        loaderLayout_signup.setVisibility(View.GONE); //로딩 화면 보여주기
                                     }else
                                         Log.d(TAG, "회원가입 실패시 (task.getException : "+task.getException());
+                                    loaderLayout_signup.setVisibility(View.GONE); //로딩 화면 보여주기
 
                                     //Toast.makeText(this, "회원가입 실패 ",Toast.LENGTH_SHORT).show();
                                     //updateUI(null);
@@ -145,10 +156,12 @@ private static final String TAG = "SignUpActivity";// 로그찍을때 태그
             }else{ // 비밀번호랑 비밀번호 확인 값이 다를때 사용자에게 토스트메시지로 알려줌
                 startToast("비밀번호가 일치하지 않습니다. ");
                 //Toast.makeText(this, "비밀번호가 일치하지 않습니다. ", Toast.LENGTH_SHORT).show();
+                loaderLayout_signup.setVisibility(View.GONE); //로딩 화면 보여주기
             }
 
         }else { // 이메일,비밀번호,비밀번호확인 값을 중 최소 1개라도 입력하지 않는다면..
             startToast("이메일 또는 비밀번호,비밀번호 확인(을)를 입력해주세요.");
+            loaderLayout_signup.setVisibility(View.GONE); //로딩 화면 보여주기
         }
 
     }

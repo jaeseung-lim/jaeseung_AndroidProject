@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,12 +31,17 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";// 로그찍을때 태그
 
+    private RelativeLayout loaderLayout_main;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         Log.v(TAG, "onCreate");
+
+        loaderLayout_main =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
+        loaderLayout_main.setVisibility(View.VISIBLE); //로딩 화면 보여주기
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
@@ -94,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
             Log.v(TAG, "로그인 유저 없음");
             Log.v(TAG, "로그인 엑티비티로 이동");
+            loaderLayout_main.setVisibility(View.GONE); //로딩 화면 보여주기
             myStartActivity(LoginActivity.class,0); // 로그인된 유저가 없다면 로그인 페이지로 (로그인 유저가 없다면 0 / 있다면 1)
 
             //startSignUpActivity();
@@ -123,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
                             if (document.exists()) { // 유저아이디의 - (닉네임,자기소개,프로필사진) key , data(introduce,name,photoUrl)가 존재 한다면 그냥 메인 엑티비에 남기기
                                 Log.d(TAG, "유저의 데이터가 있다. DocumentSnapshot data: " + document.getData());
+                                loaderLayout_main.setVisibility(View.GONE); //로딩 화면 보여주기
                             } else { //없으면 회원정보 등록하는 액티비티로 이동
                                 Log.d(TAG, "유저의 데이터가 없다.");
                                 myStartActivity1(MemberinitActivity.class);
