@@ -22,10 +22,9 @@ import android.media.Image;
 import android.media.ImageReader;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import org.androidtown.sns_project.Camera2BasicFragment;
+import org.androidtown.sns_project.view.Camera2BasicFragment;
 import org.androidtown.sns_project.R;
 
 import java.io.File;
@@ -39,8 +38,6 @@ public class CameraActivity extends AppCompatActivity {
 
     private static final String TAG = "CameraActivity";// 로그찍을때 태그
     private Camera2BasicFragment camera2BasicFragment;
-
-
 
     /**
      * This a callback object for the {@link ImageReader}. "onImageAvailable" will be called when a

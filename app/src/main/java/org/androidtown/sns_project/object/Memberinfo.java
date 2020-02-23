@@ -1,4 +1,4 @@
-package org.androidtown.sns_project;
+package org.androidtown.sns_project.object;
 
 import android.widget.EditText;
 

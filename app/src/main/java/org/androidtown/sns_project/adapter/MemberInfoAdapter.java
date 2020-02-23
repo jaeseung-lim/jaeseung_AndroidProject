@@ -1,6 +1,7 @@
 package org.androidtown.sns_project.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
-import org.androidtown.sns_project.Memberinfo;
+import org.androidtown.sns_project.activity.ChatActivity;
+import org.androidtown.sns_project.object.Memberinfo;
 import org.androidtown.sns_project.R;
 
 import java.util.List;
@@ -35,19 +36,23 @@ public class MemberInfoAdapter extends RecyclerView.Adapter<MemberInfoAdapter.Me
 
         View view = LayoutInflater.from(context).inflate(R.layout.item_memberlist,viewGroup,false);
 
-
         return new MembersHolder(view);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull MembersHolder membersHolder, int position) { // 리사이클러뷰에 표현해줄 데이터를 묶어주는 곳
                                         //MyHolder myHolder
+
         //get data
+        final String memberUID=memberinfoList.get(position).getMemberUid();
         String memberProfileImage=memberinfoList.get(position).getphotoUrl();
         final String memberProfileName=memberinfoList.get(position).getName();
         String memberProfileIntroduce=memberinfoList.get(position).getIntroduce();
 
-        //set data // MembersHolder membersHolder 에서 레이아웃 값 받아서 데이터를 셋팅해줌
+        // set data
+        // MembersHolder membersHolder 에서 레이아웃 값 받아서 데이터를 셋팅해줌
+
         membersHolder.members_name_TextView.setText(memberProfileName);
         membersHolder.members_introduce_TextView.setText(memberProfileIntroduce);
         try{
@@ -61,7 +66,13 @@ public class MemberInfoAdapter extends RecyclerView.Adapter<MemberInfoAdapter.Me
         membersHolder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(context,""+memberProfileName, Toast.LENGTH_SHORT).show();
+                /* Click member from memberlist to start chatting / messaging
+                 * Start activity by putting UID of receiver
+                 * we will use that UID to identify the member we are gonna chat */
+
+                Intent intent=new Intent(context, ChatActivity.class);
+                intent.putExtra("memberUid", memberUID);
+                context.startActivity(intent);
 
             }
         });

@@ -70,9 +70,16 @@ public class MainActivity extends AppCompatActivity {
 
                         return true;
 
-                    case R.id.chatting_navi:
+                    case R.id.memberlist_navi:
 
-                        startActivity(new Intent(getApplicationContext(), ChattingActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MemberlistActivity.class));
+                        overridePendingTransition(0, 0);
+
+                        return true;
+
+                    case R.id.chatlist_navi:
+
+                        startActivity(new Intent(getApplicationContext(), ChatListActivity.class));
                         overridePendingTransition(0, 0);
 
                         return true;
@@ -107,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             // 앱의 흐름
             // 1. 메인 화면을 처음 시작하고
             // 2. 로그인된 유저가 없다면 회원가입 화면으로 전환됌
+
         }else{ // 로그인 완료되었다면...
             //myStartActivity1(MemberinitActivity.class); // 임시로
             //myStartActivity1(CameraActivity.class);

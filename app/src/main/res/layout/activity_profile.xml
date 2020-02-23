@@ -90,25 +90,25 @@
 
             </LinearLayout>
 
-            <TextView
+            <EditText
                 android:id="@+id/Myprofile_introduce"
-                android:layout_width="203dp"
-                android:layout_height="28dp"
-                android:layout_margin="10dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="112dp"
+                android:layout_width="219dp"
+                android:layout_height="99dp"
+                android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
                 android:text="자기소개"
-                android:textSize="20dp"
-                android:textStyle="italic"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.833"
                 app:layout_constraintStart_toEndOf="@+id/Myprofile_image"
                 app:layout_constraintTop_toBottomOf="@+id/Myprofile_name"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.171" />
 
             <TextView
                 android:id="@+id/Myprofile_name"
-                android:layout_width="159dp"
-                android:layout_height="39dp"
+                android:layout_width="213dp"
+                android:layout_height="36dp"
                 android:layout_margin="10dp"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="44dp"
@@ -116,6 +116,7 @@
                 android:textSize="30dp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/Myprofile_image"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.111" />

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.androidtown.sns_project;
+package org.androidtown.sns_project.view;
 
 import android.Manifest;
 import android.app.Activity;
@@ -64,6 +64,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import org.androidtown.sns_project.R;
 import org.androidtown.sns_project.fragment.AutoFitTextureView;
 
 import java.io.File;

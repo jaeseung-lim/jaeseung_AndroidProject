@@ -3,6 +3,7 @@ package org.androidtown.sns_project.activity;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,19 +15,19 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.androidtown.sns_project.R;
 
-public class SearchActivity extends AppCompatActivity {
+public class ChatListActivity extends AppCompatActivity {
 
-    private static final String TAG = "SearchActivity";// 로그찍을때 태그
+    private static final String TAG = "ChatListActivity";// 로그찍을때 태그
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_chat_list);
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setSelectedItemId(R.id.search_navi);// res - menu - item이름
+        bottomNavigationView.setSelectedItemId(R.id.chatlist_navi);// res - menu - item이름
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -35,7 +36,8 @@ public class SearchActivity extends AppCompatActivity {
 
                     case R.id.search_navi :
 
-
+                        startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+                        overridePendingTransition(0, 0);
 
                         return true;
 
@@ -43,6 +45,7 @@ public class SearchActivity extends AppCompatActivity {
 
                         startActivity(new Intent(getApplicationContext(), MainActivity.class));
                         overridePendingTransition(0, 0);
+
 
                         return true;
 
@@ -54,7 +57,6 @@ public class SearchActivity extends AppCompatActivity {
                         return true;
 
                     case R.id.memberlist_navi:
-
                         startActivity(new Intent(getApplicationContext(), MemberlistActivity.class));
                         overridePendingTransition(0, 0);
 
@@ -62,8 +64,6 @@ public class SearchActivity extends AppCompatActivity {
 
                     case R.id.chatlist_navi:
 
-                        startActivity(new Intent(getApplicationContext(), ChatListActivity.class));
-                        overridePendingTransition(0, 0);
 
                         return true;
 
@@ -74,7 +74,7 @@ public class SearchActivity extends AppCompatActivity {
         });
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-    }//onCreate
+    }
 
     @Override
     protected void onStart() {
@@ -144,7 +144,4 @@ public class SearchActivity extends AppCompatActivity {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-
 }
-
-

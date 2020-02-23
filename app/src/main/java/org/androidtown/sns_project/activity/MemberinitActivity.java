@@ -34,7 +34,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import org.androidtown.sns_project.Memberinfo;
+import org.androidtown.sns_project.object.Memberinfo;
 import org.androidtown.sns_project.R;
 
 import java.io.File;
@@ -269,9 +269,9 @@ public class MemberinitActivity extends AppCompatActivity {
             // Create a reference to "mountains.jpg"
             //StorageReference mountainsRef = storageRef.child("mountains.jpg");
 
-
-
             // Create a reference to 'images/mountains.jpg'
+
+
             final StorageReference mountainImagesRef = storageRef.child("members/"+user.getUid()+"/profileimage.jpg"); //storage
 
             if(profilePath == null){ // 사진이 없다면 그냥 올리고

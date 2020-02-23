@@ -161,9 +161,16 @@ public class ProfileActivity extends AppCompatActivity {
 
                         return true;
 
-                    case R.id.chatting_navi:
+                    case R.id.memberlist_navi:
 
-                        startActivity(new Intent(getApplicationContext(), ChattingActivity.class));
+                        startActivity(new Intent(getApplicationContext(), MemberlistActivity.class));
+                        overridePendingTransition(0, 0);
+
+                        return true;
+
+                    case R.id.chatlist_navi:
+
+                        startActivity(new Intent(getApplicationContext(), ChatListActivity.class));
                         overridePendingTransition(0, 0);
 
                         return true;
@@ -221,6 +228,7 @@ public class ProfileActivity extends AppCompatActivity {
                 }
             }
         });
+
         storage = FirebaseStorage.getInstance(); // 스토리지 인스턴스
 
         // Create a storage reference from our app
