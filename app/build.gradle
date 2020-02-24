@@ -31,6 +31,7 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-firestore:21.4.0'// 파이어베이스 Cloud Firestore
     implementation 'com.google.firebase:firebase-storage:19.1.1'// 파이어베이스 Cloud Storage
+    implementation 'com.google.firebase:firebase-database:19.2.1'//파이어베이스 Realtime
 //
     //implementation 'com.firebaseui:firebase-ui-auth:4.3.1' // 파이어베이스 전용 ui 제공툴
 

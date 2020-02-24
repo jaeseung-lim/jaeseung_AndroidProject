@@ -372,6 +372,7 @@ public class MemberinitActivity extends AppCompatActivity {
                         startToast("회원정보 등록에 실패 하였습니다.");
                     }
                 });
+
     }
 
 
