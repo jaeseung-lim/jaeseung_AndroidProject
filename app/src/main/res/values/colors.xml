@@ -2,7 +2,7 @@
 <resources>
     <color name="colorPrimary">#FFA500</color>
     <color name="colorPrimaryDark">#FFA500</color>
-    <color name="colorAccent">#D81B60</color>
+    <color name="colorAccent">#FFA500</color>
     <color name="colorOrange">#FFA500</color>
     <color name="colorSilver">#FFC0C0C0</color>
     <color name="colorWhite">#FFFFFFFF</color>

@@ -11,6 +11,152 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <TabHost
+            android:id="@+id/tabHost1"
+            android:layout_width="418dp"
+            android:layout_height="676dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+            <!--  app:layout_constraintEnd_toEndOf="parent"
+              app:layout_constraintStart_toStartOf="parent"
+              app:layout_constraintTop_toBottomOf="@+id/home_toolbar">-->
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <!-- TabWidget의 id값이 반드시 "tabs"로 지정되어야 함. -->
+
+                <TabWidget
+                    android:id="@android:id/tabs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top"
+                    android:textAlignment="center" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:id="@android:id/tabcontent"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <!-- 첫 번째 페이지. content1 -->
+
+                        <LinearLayout
+                            android:id="@+id/미정1"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/search_recyclerview_business"
+                                android:layout_width="407dp"
+                                android:layout_height="670dp"
+                                app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </LinearLayout>
+
+
+                        <!-- 두 번째 페이지. content2 -->
+
+                        <LinearLayout
+                            android:id="@+id/미정2"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/search_recyclerview_entertainment"
+                                android:layout_width="407dp"
+                                android:layout_height="670dp"
+                                app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                        </LinearLayout>
+
+
+                        <!-- 세 번째 페이지. content3 -->
+                        <LinearLayout
+                            android:id="@+id/미정3"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/search_recyclerview_health"
+                                android:layout_width="407dp"
+                                android:layout_height="670dp"
+                                app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+                        </LinearLayout>
+
+                        <!-- 네 번째 페이지. content3 -->
+                        <LinearLayout
+                            android:id="@+id/미정4"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/search_recyclerview_sports"
+                                android:layout_width="407dp"
+                                android:layout_height="670dp"
+                                app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                        </LinearLayout>
+
+                        <!-- 다섯 번째 페이지. content3 -->
+                        <LinearLayout
+                            android:id="@+id/미정5"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/search_recyclerview_technology"
+                                android:layout_width="407dp"
+                                android:layout_height="670dp"
+                                app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+                        </LinearLayout>
+
+
+                    </FrameLayout>
+
+
+                    <!-- FrameLayout의 id값이 반드시 "tabcontent"로 지정되어야 함. -->
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </TabHost>
+
+
+
+
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
