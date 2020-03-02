@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,12 +19,17 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import org.androidtown.sns_project.R;
+import org.androidtown.sns_project.notifications.Token;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -32,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";// 로그찍을때 태그
 
     private RelativeLayout loaderLayout_main;
+    String mUID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,13 +98,6 @@ public class MainActivity extends AppCompatActivity {
         });
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-    }//onCreate
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Log.v(TAG, "onStart");
-
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인 + 현재 유저 정보 가져옴
         Log.v(TAG, "user : "+user);
         FirebaseFirestore db = FirebaseFirestore.getInstance(); // 파이어베이스 DB 초기화
@@ -151,6 +151,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
 
+            checkUserStatus();
+
+            //토큰 받기
+            FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                @Override
+                public void onComplete(@NonNull Task<InstanceIdResult> task) {
+
+                    if(!task.isSuccessful()){
+                        Log.v(TAG,"getInstanceId failed",task.getException());
+                        return;
+                    }
+
+                    //Get new Instance ID token
+                    String token = task.getResult().getToken();
+                    Log.v(TAG,"토큰 생성 : "+token);
+                    updateToken(token);
+
+                }
+            });
+
             /*for (UserInfo profile : user.getProviderData()) { // 로그인된 유저의 회원정보를 받아온다.
                 // Id of the provider (ex: google.com)
                 String providerId = profile.getProviderId(); // 구글 로그인 하였을 경우시
@@ -186,11 +206,38 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
+
+    }//onCreate
+
+    public void updateToken(String token){
+
+        Log.v(TAG," updateToken 함수 시작 ");
+
+        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("Tokens");
+        Token mToken= new Token(token);
+        Log.v(TAG," updateToken 함수의 mUID : "+mUID);
+        Log.v(TAG," updateToken 함수의 mToken : "+mToken);
+        reference.child(mUID).setValue(mToken);
+
+        Log.v(TAG," updateToken 함수 끝 ");
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.v(TAG, "onStart");
+
+
+
     }
 
     @Override
     protected void onResume() {
+
+        checkUserStatus();
         super.onResume();
+
         Log.v(TAG, "onResume/ MainActivity 보임");
         //findViewById(R.id.logoutButton).setOnClickListener(onClickListener);
     }
@@ -242,6 +289,36 @@ public class MainActivity extends AppCompatActivity {
         moveTaskToBack(true);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(1);
+    }
+
+    private void checkUserStatus(){
+
+        Log.v(TAG,"checkUserStatus 함수 시작 ");
+        //get current user
+        // FirebaseUser user = firebaseAuth.getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인 + 현재 유저 정보 가져옴
+
+        Log.v(TAG,"checkUserStatus 함수의 user : "+user);
+
+        if(user != null){
+            //user is signed in stay here
+            //set email of logged in user
+            //mProfileTv.setText(user.getEmail());
+            //myUid=user.getUid();// currently signed in user's uid
+
+            Log.v(TAG,"checkUserStatus 함수의 user 있음  ");
+            mUID=user.getUid();
+            Log.v(TAG,"checkUserStatus 함수의 user 있음 + mUID : " + mUID);
+            //save uid of currently signed in user in shared preferences
+            SharedPreferences sp = getSharedPreferences("SP_USER",MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("Current_USERID",mUID);
+            editor.apply();
+
+        }else{
+            //user not signed in, go to main activity
+
+        }
     }
 
     private void myStartActivity(Class c,int i){

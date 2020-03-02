@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import retrofit2.Call;
+import retrofit2.Callback;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -37,6 +39,12 @@ import com.squareup.picasso.Picasso;
 import org.androidtown.sns_project.R;
 import org.androidtown.sns_project.adapter.ChatAdapter;
 import org.androidtown.sns_project.adapter.MemberInfoAdapter;
+import org.androidtown.sns_project.notifications.APIService;
+import org.androidtown.sns_project.notifications.Client;
+import org.androidtown.sns_project.notifications.Data;
+import org.androidtown.sns_project.notifications.Response;
+import org.androidtown.sns_project.notifications.Sender;
+import org.androidtown.sns_project.notifications.Token;
 import org.androidtown.sns_project.object.Chatinfo;
 import org.androidtown.sns_project.object.Memberinfo;
 
@@ -58,6 +66,9 @@ public class ChatActivity extends AppCompatActivity {
     EditText chat_messageEt;
     ImageView sendBtn;
 
+    private FirebaseUser user;
+    private DocumentSnapshot document;
+
     private static final String TAG = "ChatActivity";// 로그찍을때 태그
 
     //파이어베이스 인증
@@ -78,6 +89,9 @@ public class ChatActivity extends AppCompatActivity {
 
     List<Chatinfo> chatList;
     ChatAdapter ChatAdapter;
+
+    APIService apiService;
+    boolean notify = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,6 +123,9 @@ public class ChatActivity extends AppCompatActivity {
         //recyclerView properties
         chat_recyclerView.setHasFixedSize(true);
         chat_recyclerView.setLayoutManager(linearLayoutManager);
+
+        //create api service
+        apiService = Client.getRetrofit("https://fcm.googleapis.com/").create(APIService.class);
 
         /* On clicking user from users Memberlist we have passed that user's UID using intent
             * So get that uid here to get the profile picture, name and start chat with that user*/
@@ -254,16 +271,23 @@ public class ChatActivity extends AppCompatActivity {
                 });*/
     }
 
-    private void sendMessage(String message) {
+    private void sendMessage(final String message) {
+
+        Log.v(TAG, "sendMessage 메서드 시작");
+
 
         //현재 시간을 msec 으로 구한다.
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
         //현재 시간을 date 변수에 저장한다.
-        Date date =  new Date(now);
+        //Date date =  new Date(now);
         //시간을 나타내는 포맷을 정한다.
-        SimpleDateFormat sdfNow=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        //SimpleDateFormat sdfNow=new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         //nowDate 변수에 값을 저장한다.
-        String formatDate=sdfNow.format(date);
+        //String formatDate=sdfNow.format(date);
+
+        String formatDate= String.valueOf(System.currentTimeMillis()); // 현재 시간을 파이어베이스에 저장해주고
+
+        Log.v(TAG, "formatDate : "+formatDate);
 
         //firebaseDatabase=FirebaseDatabase.getInstance();
         DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
@@ -273,11 +297,74 @@ public class ChatActivity extends AppCompatActivity {
         hashMap.put("receiver",memberUid);
         hashMap.put("message",message);
         hashMap.put("timestamp",formatDate);
+
         databaseReference.child("Chats").push().setValue(hashMap);
 
-        //reset edittecxt after sending message
-        chat_messageEt.setText("");
 
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        db=FirebaseFirestore.getInstance();
+        DocumentReference docRef = db.collection("Members").document(user.getUid());
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    document = task.getResult();
+                    if (document.exists()) {
+                        Log.v(TAG, "sendMessage 메서드의 DocumentSnapshot data: " + document.getData());
+                        //document.getData().get("photoUrl");
+
+                        String membername= (String) document.getData().get("name");
+
+                        Log.v(TAG, "sendMessage 메서드의 document.getData().get(\"name\") : " + membername);
+
+                        Log.v(TAG, "notify  : " + notify);
+                        if(notify){
+
+                            //sendNotification(memberUid,memberinfo.getName(),message);
+                            Log.v(TAG, "sendNotification 파라메터 memberUid : " + memberUid);
+                            Log.v(TAG, "sendNotification 파라메터 membername : " + membername);
+                            Log.v(TAG, "sendNotification 파라메터 message: " + message);
+
+                            sendNotification(memberUid,membername,message);
+                        }
+
+                        notify=false;
+                        Log.v(TAG, "notify  : " + notify);
+
+                    } else {
+                        Log.v(TAG, "No such document");
+                    }
+                } else {
+                    Log.v(TAG, "get failed with ", task.getException());
+                }
+            }
+        });
+
+
+        //String msg=message;
+        //내 uid 가져오기
+        /*DatabaseReference database = FirebaseDatabase.getInstance().getReference("members").child(myUid);
+
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            Memberinfo memberinfo = dataSnapshot.getValue(Memberinfo.class);
+
+            if(notify){
+                //sendNotification(memberUid,memberinfo.getName(),message);
+                sendNotification(memberUid,memberinfo.getName(),message);
+            }
+
+            notify=false;
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });*/
 
         /*"Chats" node will be created that will contain all chats
          * Whenever user sends message it will create new child in "Chats" node and that child will contain
@@ -326,6 +413,51 @@ public class ChatActivity extends AppCompatActivity {
         //reset edittecxt after sending message
         chat_messageEt.setText("");*/
 
+    }
+
+    private void sendNotification(final String memberUid, final String notiName, final String message){
+
+        Log.v(TAG, " sendNotification 함수 시작 ");
+        DatabaseReference allTokens=FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(memberUid);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds: dataSnapshot.getChildren()){
+                    Log.v(TAG, " dataSnapshot.getChildren() 함수 시작 ");
+                    Token token = ds.getValue(Token.class);
+                    Log.v(TAG, " dataSnapshot.getChildren() 함수의 token  "+ token.getToken());
+                    Data data = new Data(myUid,notiName+" : "+message,"새로운 메시지가 도착했습니다.",memberUid,R.drawable.unnamed);
+                    Log.v(TAG, " dataSnapshot.getChildren() 함수의 data data.getUser() : "+data.getUser());
+                    Log.v(TAG, " dataSnapshot.getChildren() 함수의 data data.getBody() : "+data.getBody());
+                    Log.v(TAG, " dataSnapshot.getChildren() 함수의 data data.getTitle() : "+data.getTitle());
+                    Log.v(TAG, " dataSnapshot.getChildren() 함수의 data data.getSent() : "+data.getSent());
+
+                    Sender sender = new Sender(data,token.getToken());
+                    Log.v(TAG, " dataSnapshot.getChildren() 함수의 sender "+sender.getData());
+                    Log.v(TAG, " dataSnapshot.getChildren() 함수의 sender "+sender.getTo());
+
+                    apiService.SendNotification(sender)
+                            .enqueue(new Callback<Response>() {
+                                @Override
+                                public void onResponse(Call<Response> call, retrofit2.Response<Response> response) {
+                                    Log.v(TAG, " dataSnapshot.getChildren() 함수의 onResponse 응답 성공 ");
+                                    Toast.makeText(ChatActivity.this,""+response.message(),Toast.LENGTH_SHORT);
+                                }
+
+                                @Override
+                                public void onFailure(Call<Response> call, Throwable t) {
+
+                                }
+                            });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private String setOneToOneChat(String uid1, String uid2)
@@ -429,6 +561,7 @@ public class ChatActivity extends AppCompatActivity {
             switch (v.getId()){
 
                 case R.id.sendBtn:
+                    notify=true;
                     Log.v(TAG, "sendBtn 버튼 클릭 ");
                     //get text from edit text
                     String message = chat_messageEt.getText().toString().trim();
@@ -441,9 +574,11 @@ public class ChatActivity extends AppCompatActivity {
 
                     }else{
                         //text not empty
+                        sendMessage(message);
                     }
 
-                    sendMessage(message);
+                    //reset edittecxt after sending message
+                    chat_messageEt.setText("");
 
                     break;
 

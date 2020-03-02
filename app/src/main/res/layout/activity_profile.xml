@@ -44,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="#FFC107"
-                    android:text="프로필 수정                                    >"
+                    android:text="프로필 수정                                 >"
                     android:textAlignment="viewStart"
                     android:textSize="25sp" />
 
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="#FFC107"
-                    android:text="알림 설정                                        >"
+                    android:text="알림 설정                                     >"
                     android:textAlignment="viewStart"
                     android:textSize="25sp" />
 
@@ -64,7 +64,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="#FFC107"
-                    android:text="공지 사항                                        >"
+                    android:text="공지 사항                                     >"
                     android:textAlignment="viewStart"
                     android:textSize="25sp" />
 
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="#FFC107"
-                    android:text="약관 및 정책                                   >"
+                    android:text="약관 및 정책                                >"
                     android:textAlignment="viewStart"
                     android:textSize="25sp" />
 
@@ -84,26 +84,26 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
                     android:background="#FFC107"
-                    android:text="로그아웃                                         >"
+                    android:text="로그아웃                                      >"
                     android:textAlignment="viewStart"
                     android:textSize="25sp" />
 
             </LinearLayout>
 
-            <EditText
+
+            <TextView
                 android:id="@+id/Myprofile_introduce"
-                android:layout_width="219dp"
-                android:layout_height="99dp"
+                android:layout_width="183dp"
+                android:layout_height="71dp"
                 android:ems="10"
                 android:gravity="start|top"
-                android:inputType="textMultiLine"
                 android:text="자기소개"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.833"
+                app:layout_constraintHorizontal_bias="0.142"
                 app:layout_constraintStart_toEndOf="@+id/Myprofile_image"
                 app:layout_constraintTop_toBottomOf="@+id/Myprofile_name"
-                app:layout_constraintVertical_bias="0.171" />
+                app:layout_constraintVertical_bias="0.137" />
 
             <TextView
                 android:id="@+id/Myprofile_name"
