@@ -2,7 +2,7 @@ package org.androidtown.sns_project.object;
 
 import java.io.Serializable;
 
-public class NewsData_business implements Serializable {
+public class NewsData_technology implements Serializable {
 
      private String business_title;
      private String business_description;

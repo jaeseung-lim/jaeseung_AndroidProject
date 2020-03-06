@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -49,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
 
         loaderLayout_main =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
         loaderLayout_main.setVisibility(View.VISIBLE); //로딩 화면 보여주기
+
+        //플로팅 버튼 이름으로 찾아 오기
+        findViewById(R.id.addpost_btn).setOnClickListener(onClickListener);
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
@@ -90,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         overridePendingTransition(0, 0);
 
                         return true;
+
 
 
                 }
@@ -276,13 +281,15 @@ public class MainActivity extends AppCompatActivity {
 
             switch (v.getId()){
 
-                case 1:
+                case R.id.addpost_btn:
 
                     break;
             }
 
         }
     };
+
+
 
     @Override public void onBackPressed() { // 바로 앱 종료
         super.onBackPressed();

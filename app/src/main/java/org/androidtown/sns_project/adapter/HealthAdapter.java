@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,24 +13,24 @@ import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 import org.androidtown.sns_project.R;
-import org.androidtown.sns_project.activity.SearchActivity;
-import org.androidtown.sns_project.object.NewsData_business;
+import org.androidtown.sns_project.object.NewsData_entertainment;
+import org.androidtown.sns_project.object.NewsData_health;
 
 import java.util.List;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
+public class HealthAdapter extends RecyclerView.Adapter<HealthAdapter.HealthViewHolder> {
 
     private static final String TAG = "SearchAdapter";// 로그찍을때 태그
 
-    private List<NewsData_business> mDataset;
+    private List<NewsData_health> mDataset;
     private static View.OnClickListener onClickListener;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
-    public static class SearchViewHolder extends RecyclerView.ViewHolder {
+    public static class HealthViewHolder extends RecyclerView.ViewHolder {
 
         //아이템의 요소를 연결해주는 부분
         // each data item is just a string in this case
@@ -41,7 +40,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         public SimpleDraweeView news_images;
         public View rootView;
 
-        public SearchViewHolder(View v) {
+        public HealthViewHolder(View v) {
             super(v);
             //받아온 view를 통하여 view에 속해있는 요소를 할당해줘야함
             news_title = v.findViewById(R.id.news_title);
@@ -57,7 +56,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public SearchAdapter(List<NewsData_business> myDataset, Context context,View.OnClickListener onClick) {
+    public HealthAdapter(List<NewsData_health> myDataset, Context context, View.OnClickListener onClick) {
 
         Fresco.initialize(context);
         mDataset = myDataset;
@@ -66,35 +65,36 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     // Create new views (invoked by the layout manager)
     @Override
-    public SearchAdapter.SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public HealthAdapter.HealthViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
         //item 레이아웃 연결 하는 것
         // create a new view
         LinearLayout v = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_news, parent, false);
 
-        SearchViewHolder vh = new SearchViewHolder(v);
+        HealthViewHolder vh = new HealthViewHolder(v);
+
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(SearchViewHolder holder, int position) {
+    public void onBindViewHolder(HealthViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
-        NewsData_business newsData_business=mDataset.get(position);
+        NewsData_health newsData_health=mDataset.get(position);
 
-        holder.news_title.setText(newsData_business.getTitle());
+        holder.news_title.setText(newsData_health.getTitle());
 
-        String description = newsData_business.getDescription();
+        String description = newsData_health.getDescription();
         if(description != null && description.length() >0){
-            holder.news_discription.setText(newsData_business.getDescription());
+            holder.news_discription.setText(newsData_health.getDescription());
         }else {
             holder.news_discription.setText("-----( 중 략 )-----");
         }
 
-        Uri uri = Uri.parse(newsData_business.getUrlToImage());
+        Uri uri = Uri.parse(newsData_health.getUrlToImage());
         Log.v(TAG, "uri : "+ uri);
         holder.news_images.setImageURI(uri);
 
@@ -110,7 +110,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         return mDataset == null ? 0 : mDataset.size();
     }
 
-    public NewsData_business getNews(int position){
+    public NewsData_health getNews(int position){
         return mDataset != null ? mDataset.get(position) : null ;
     }
 }

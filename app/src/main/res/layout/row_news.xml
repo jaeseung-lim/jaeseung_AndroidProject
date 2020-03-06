@@ -56,10 +56,11 @@
                 android:id="@+id/news_discription"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity=""
-                android:text="(기사 내용...)"
                 android:ellipsize="end"
-                android:maxLines="5"/>
+                android:gravity=""
+                android:maxLines="3"
+                android:padding="5dp"
+                android:text="(기사 내용...)" />
         </LinearLayout>
 
 
