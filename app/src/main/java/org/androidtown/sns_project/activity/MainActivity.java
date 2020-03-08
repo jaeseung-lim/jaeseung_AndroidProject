@@ -1,17 +1,27 @@
 package org.androidtown.sns_project.activity;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.PagerSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -30,9 +40,24 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import org.androidtown.sns_project.R;
+import org.androidtown.sns_project.adapter.TopAdapter;
 import org.androidtown.sns_project.notifications.Token;
+import org.androidtown.sns_project.object.Topitem_Data;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    private Spinner spinner2;
+    ArrayList<String> spinner_arrayList;
+    ArrayAdapter<String> spinner_arrayAdapter;
+
+
+    private ArrayList<Topitem_Data> topitem_data_arraylist;
+    private RecyclerView top_recyclerView;
+    private RecyclerView.Adapter top_mAdapter;
+    private RecyclerView.LayoutManager top_layoutManager;
+
 
     public boolean 로그아웃=false;
 
@@ -50,6 +75,52 @@ public class MainActivity extends AppCompatActivity {
 
         loaderLayout_main =findViewById(R.id.loaderLayout); // 레이아웃의 로딩 id 연결
         loaderLayout_main.setVisibility(View.VISIBLE); //로딩 화면 보여주기
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        top_recyclerView = (RecyclerView) findViewById(R.id.top_recyclerview);
+
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        top_recyclerView.setHasFixedSize(true);
+
+        // use a linear layout manager
+        top_layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL,false);
+        top_recyclerView.setLayoutManager(top_layoutManager);
+
+        SnapHelper snapHelper_top = new PagerSnapHelper();
+        snapHelper_top.attachToRecyclerView(top_recyclerView);
+
+        topitem_data_arraylist=new ArrayList<>();
+        // specify an adapter (see also next example)
+        top_mAdapter = new TopAdapter(topitem_data_arraylist);
+        top_recyclerView.setAdapter(top_mAdapter);
+
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+        spinner_arrayList = new ArrayList<>();
+        spinner_arrayList.add("(정렬)");
+        spinner_arrayList.add("거리순");
+        spinner_arrayList.add("평점순");
+        spinner_arrayList.add("좋아요순");
+
+        spinner_arrayAdapter = new ArrayAdapter<>(getApplicationContext(),
+                android.R.layout.simple_spinner_dropdown_item,
+                spinner_arrayList);
+
+        spinner2 = (Spinner)findViewById(R.id.spinner2);
+        spinner2.setAdapter(spinner_arrayAdapter);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Toast.makeText(getApplicationContext(),spinner_arrayList.get(i)+"가 선택되었습니다.",
+                        Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
 
         //플로팅 버튼 이름으로 찾아 오기
         findViewById(R.id.addpost_btn).setOnClickListener(onClickListener);
@@ -281,7 +352,16 @@ public class MainActivity extends AppCompatActivity {
 
             switch (v.getId()){
 
+                case R.id.add_topbtn:
+
+                    addtop();
+
+
+                    break;
+
                 case R.id.addpost_btn:
+
+                    startActivity(new Intent(MainActivity.this,AddPostActivity.class));
 
                     break;
             }
@@ -289,6 +369,19 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
+    private void addtop() {
+
+        AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        View view= LayoutInflater.from(MainActivity.this).inflate(R.layout.edit_top_box,null,false);
+        builder.setView(view);
+
+        EditText top_title=findViewById(R.id.top_title);
+        EditText top_date=findViewById(R.id.top_date);
+        ImageView top_image=findViewById(R.id.top_image);
+
+
+
+    }
 
 
     @Override public void onBackPressed() { // 바로 앱 종료

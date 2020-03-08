@@ -111,6 +111,8 @@ public class EntertainmentAdapter extends RecyclerView.Adapter<EntertainmentAdap
     }
 
     public NewsData_entertainment getNews(int position){
+
         return mDataset != null ? mDataset.get(position) : null ;
+
     }
 }
