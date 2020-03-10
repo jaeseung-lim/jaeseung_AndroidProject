@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.SnapHelper;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.Image;
+import android.media.tv.TvContract;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,8 +31,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -40,11 +44,14 @@ import com.google.firebase.iid.InstanceIdResult;
 import com.squareup.picasso.Picasso;
 
 import org.androidtown.sns_project.R;
+import org.androidtown.sns_project.adapter.AdapterPosts;
 import org.androidtown.sns_project.adapter.TopAdapter;
 import org.androidtown.sns_project.notifications.Token;
+import org.androidtown.sns_project.object.ModelPost;
 import org.androidtown.sns_project.object.Topitem_Data;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -54,9 +61,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private ArrayList<Topitem_Data> topitem_data_arraylist;
-    private RecyclerView top_recyclerView;
+    private RecyclerView top_recyclerView,post_recyclerView;
     private RecyclerView.Adapter top_mAdapter;
     private RecyclerView.LayoutManager top_layoutManager;
+    List<ModelPost> postList;
+    AdapterPosts adapterPosts;
 
 
     public boolean 로그아웃=false;
@@ -124,6 +133,23 @@ public class MainActivity extends AppCompatActivity {
 
         //플로팅 버튼 이름으로 찾아 오기
         findViewById(R.id.addpost_btn).setOnClickListener(onClickListener);
+
+        ////////////////////////////////////////////////////////////////////////////////////////////
+
+        //recyler view and its properties
+        post_recyclerView= findViewById(R.id.postsRecyclerview);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        //show newest post first , for this load from last
+        layoutManager.setStackFromEnd(true);
+        layoutManager.setReverseLayout(true);
+
+        //set layout to recyclerview
+        post_recyclerView.setLayoutManager(layoutManager);
+
+
+        //init post list
+        postList=new ArrayList<>();
+        loadPosts();
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
@@ -284,6 +310,38 @@ public class MainActivity extends AppCompatActivity {
 
 
     }//onCreate
+
+    private void loadPosts() {
+        //path of all posts
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        //get all data from this ref
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                postList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    ModelPost modelPost = ds.getValue(ModelPost.class);
+
+                    postList.add(modelPost);
+
+                    //adapter
+                    adapterPosts = new AdapterPosts(MainActivity.this,postList);
+                    //set adapter to recyclerview
+                    post_recyclerView.setAdapter(adapterPosts);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //in case of error
+            }
+        });
+    }
+
+    private void searchPosts(){
+
+    }
 
     public void updateToken(String token){
 

@@ -22,11 +22,11 @@
             android:singleLine="true"/>
 
         <ImageView
+            android:id="@+id/pImageIv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/pImageIv"
-            android:background="@color/colorAccent"
-            android:minHeight="200dp"/>
+            android:background="#B6B6B6"
+            android:minHeight="200dp" />
 
         <EditText
             android:id="@+id/pDescriptonEt"

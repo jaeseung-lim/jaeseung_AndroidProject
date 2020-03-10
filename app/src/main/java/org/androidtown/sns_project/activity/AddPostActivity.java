@@ -13,6 +13,8 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -42,10 +44,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import org.androidtown.sns_project.R;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class AddPostActivity extends AppCompatActivity {
 
@@ -53,6 +58,12 @@ public class AddPostActivity extends AppCompatActivity {
     EditText titleEt,descriptionEt;
     ImageView imageIv;
     Button uploadBtn;
+
+    //info of post to be edited
+    String editTitle, editDescription, editImage;
+
+    String isUpdateKey;
+    String editPostId;
 
     private FirebaseFirestore db;
     private DocumentSnapshot document;
@@ -96,11 +107,31 @@ public class AddPostActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         checkUserStatus();
 
+        //init views
+        titleEt=findViewById(R.id.pTitleEt);
+        descriptionEt=findViewById(R.id.pDescriptonEt);
+        imageIv=findViewById(R.id.pImageIv);
+        uploadBtn=findViewById(R.id.pUploadBtn);
+        findViewById(R.id.pImageIv).setOnClickListener(onClickListener);
+        findViewById(R.id.pUploadBtn).setOnClickListener(onClickListener);
 
+        //get data through intent from previous activite's adapter
+        Intent intent = getIntent();
+        isUpdateKey=""+intent.getStringExtra("key");
+        editPostId=""+intent.getStringExtra("editPostId");
+        //validate if we came here to update post i.e. came from AdapterPost
+        if(isUpdateKey.equals("editPost")){
+            //update
+            uploadBtn.setText("게시물 수정");
+            loadPostData(editPostId);
+        }else {
+            //add
+            uploadBtn.setText("게시물 포스팅");
+        }
 
         db= FirebaseFirestore.getInstance();
 
-        DocumentReference docRef = db.collection("Members").document(user.getUid());
+        DocumentReference docRef = db.collection("Members").document(uid);
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -108,19 +139,20 @@ public class AddPostActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     document = task.getResult();
                     if (document.exists()) {
+                        Log.v(TAG, "==============DocumentSnapshot 가져오기 시작!==============");
                         Log.v(TAG, "DocumentSnapshot data: " + document.getData());
 
                         name= (String) document.getData().get("name");
                         dp= (String) document.getData().get("photoUrl");
                         Log.v(TAG, "document.getData().get(\"photoUrl\") : " + document.getData().get("photoUrl"));
                         Log.v(TAG, "document.getData().get(\"name\") : " + document.getData().get("name"));
-
+                        Log.v(TAG, "==============DocumentSnapshot 가져오기 끝!!==============");
 
                     } else {
-                        Log.v(TAG, "No such document");
+                        Log.v(TAG, "==============No such document==============");
                     }
                 } else {
-                    Log.v(TAG, "get failed with ", task.getException());
+                    Log.v(TAG, "==============get failed with ==============", task.getException());
                 }
             }
         });
@@ -149,35 +181,76 @@ public class AddPostActivity extends AppCompatActivity {
         });*/
 
 
-        //init views
-        titleEt=findViewById(R.id.pTitleEt);
-        descriptionEt=findViewById(R.id.pDescriptonEt);
-        imageIv=findViewById(R.id.pImageIv);
-        uploadBtn=findViewById(R.id.pUploadBtn);
+
 
         //get image from camera / gallery on click
 
 
     }
 
+    private void loadPostData(String editPostId) {
+
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Posts");
+        //get detail of post using id of post
+        Query fquery = reference.orderByChild("pId").equalTo(editPostId);
+        fquery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for(DataSnapshot ds : dataSnapshot.getChildren()){
+
+                    //get data
+                    editTitle = ""+ds.child("pTitle").getValue();
+                    editDescription = ""+ds.child("pDescr").getValue();
+                    editImage = ""+ds.child("pImage").getValue();
+
+                    //set data to views
+                    titleEt.setText(editTitle);
+                    descriptionEt.setText(editDescription);
+
+                    //set image
+                    if(!editImage.equals("noImage")){
+
+                        try{
+                            Picasso.get().load(editImage).into(imageIv);
+                        }
+                        catch (Exception e){
+
+                        }
+
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
     private boolean checkStoragePermission(){
         //check if storage permission is enabled or not
         //return true if enabled
         //return false if not enabled
-        boolean result = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
+        Log.v(TAG, "==============checkStoragePermission 가져오기 시작!==============");
+        boolean result = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                == (PackageManager.PERMISSION_GRANTED);
 
+        Log.v(TAG, "==============checkStoragePermission 가져오기 끝! result :"+result+"==============");
                 return result;
     }
 
     private void requestStoragePermission(){
-
+        Log.v(TAG, "==============requestStoragePermission 가져오기 시작!==============");
         //request runtime storage permission
         ActivityCompat.requestPermissions(this,storagePermissions, STORAGE_REQUEST_CODE);
+        Log.v(TAG, "==============requestStoragePermission 가져오기 끝!==============");
 
 
     }
 
     private boolean checkCameraPermission(){
+        Log.v(TAG, "==============checkCameraPermission 가져오기 시작!==============");
+
         //check if camera permission is enabled or not
         //return true if enabled
         //return false if not enabled
@@ -187,13 +260,19 @@ public class AddPostActivity extends AppCompatActivity {
         boolean result1 = ContextCompat.checkSelfPermission(this,Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 == (PackageManager.PERMISSION_GRANTED);
 
+        Log.v(TAG, "==============checkCameraPermission 가져오기 끝!==============");
+
         return result && result1;
     }
 
     private void requestCameraPermission(){
 
+        Log.v(TAG, "==============requestCameraPermission 가져오기 시작!==============");
+
         //request runtime camera permission
         ActivityCompat.requestPermissions(this,cameraPermissions, CAMERA_REQUEST_CODE);
+
+        Log.v(TAG, "==============requestCameraPermission 가져오기 끝!==============");
 
 
     }
@@ -239,6 +318,7 @@ public class AddPostActivity extends AppCompatActivity {
     View.OnClickListener onClickListener = new View.OnClickListener(){
         @Override
         public void onClick(View v){
+
             switch (v.getId()){
 
                 case R.id.pUploadBtn:
@@ -258,15 +338,21 @@ public class AddPostActivity extends AppCompatActivity {
                         return;
                     }
 
+                    if(isUpdateKey.equals("editPost")){
+                        beginUpdate(title,description,editPostId);
+                    }
+                    else{
+                        uploadData(title,description);
+                    }
 
-                    if(image_uri==null){
+                    /*if(image_uri==null){
                         //post without image
-                        uploadData(title,description,"이미지 없음");
+                        uploadData(title,description,"noImage");
                     }else {
                         //post with image
                         uploadData(title,description,String.valueOf(image_uri));
                     }
-
+*/
                     break;
 
                 case R.id.pImageIv:
@@ -281,32 +367,271 @@ public class AddPostActivity extends AppCompatActivity {
         }
     };
 
-    private void uploadData(final String title, final String description, String uri) {
+    private void beginUpdate(String title, String description, String editPostId) {
+        pd.setMessage("게시물 수정중...");
+        pd.show();
+
+        if(!editImage.equals("noImage")){
+            //with image
+            updateWasWithImage(title,description,editPostId);
+        }
+        else if(imageIv.getDrawable() != null){
+            //with image
+            updateWithNowImage(title,description,editPostId);
+        }
+        else{
+            //without image
+            updateWithoutImage(title,description,editPostId);
+        }
+
+
+    }
+
+    private void updateWithoutImage(String title, String description, String editPostId) {
+
+        HashMap<String, Object> hashMap = new HashMap<>();
+        //put post
+        hashMap.put("uid", uid);
+        hashMap.put("uName", name);
+        hashMap.put("uEmail", email);
+        hashMap.put("uDp", dp);
+        hashMap.put("pTitle", title);
+        hashMap.put("pDescr", description);
+        hashMap.put("pImage", "noImage");
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+        ref.child(editPostId)
+                .updateChildren(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        pd.dismiss();
+                        Toast.makeText(AddPostActivity.this,"게시물 수정완료", Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();
+                        Toast.makeText(AddPostActivity.this,"게시물 수정실패"+e.getMessage(),Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+    private void updateWithNowImage(final String title, final String description, final String editPostId) {
+
+        //image deleted, upload new image
+        //for post-image name, post - id, publish-time
+        String timeStamp = String.valueOf(System.currentTimeMillis());
+        String filePathAndName = "Posts/" + "post_"+timeStamp;
+
+        //get image from imageview
+        Bitmap bitmap = ((BitmapDrawable)imageIv.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        //image compress
+        bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
+        byte[] data = baos.toByteArray();
+
+        StorageReference reference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
+        reference.putBytes(data)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //image uploaded get its url
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+
+                        while (!uriTask.isSuccessful());
+
+                        String downloadUri = uriTask.getResult().toString();
+                        if(uriTask.isSuccessful()){
+                            //url is received, upload to firebase database
+
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            //put post
+                            hashMap.put("uid", uid);
+                            hashMap.put("uName", name);
+                            hashMap.put("uEmail", email);
+                            hashMap.put("uDp", dp);
+                            hashMap.put("pTitle", title);
+                            hashMap.put("pDescr", description);
+                            hashMap.put("pImage", downloadUri);
+
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                            ref.child(editPostId)
+                                    .updateChildren(hashMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            pd.dismiss();
+                                            Toast.makeText(AddPostActivity.this,"게시물 수정완료", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            pd.dismiss();
+                                            Toast.makeText(AddPostActivity.this,"게시물 수정실패"+e.getMessage(),Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        }
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        //image not uploaded
+                        pd.dismiss();
+                        Toast.makeText(AddPostActivity.this,"게시물 수정실패"+e.getMessage(),Toast.LENGTH_SHORT);
+                    }
+                });
+
+
+    }
+
+    private void updateWasWithImage(final String title, final String description, final String editPostId) {
+        //post is with image, delete previous image first
+        StorageReference mPictureRef = FirebaseStorage.getInstance().getReferenceFromUrl(editImage);
+        mPictureRef.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //image deleted, upload new image
+                        //for post-image name, post - id, publish-time
+                        String timeStamp = String.valueOf(System.currentTimeMillis());
+                        String filePathAndName = "Posts/" + "post_"+timeStamp;
+
+                        //get image from imageview
+                        Bitmap bitmap = ((BitmapDrawable)imageIv.getDrawable()).getBitmap();
+                        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                        //image compress
+                        bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
+                        byte[] data = baos.toByteArray();
+
+                        StorageReference reference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
+                        reference.putBytes(data)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        //image uploaded get its url
+                                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+
+                                        while (!uriTask.isSuccessful());
+
+                                        String downloadUri = uriTask.getResult().toString();
+                                        if(uriTask.isSuccessful()){
+                                            //url is received, upload to firebase database
+
+                                            HashMap<String, Object> hashMap = new HashMap<>();
+                                            //put post
+                                            hashMap.put("uid", uid);
+                                            hashMap.put("uName", name);
+                                            hashMap.put("uEmail", email);
+                                            hashMap.put("uDp", dp);
+                                            hashMap.put("uTitle", title);
+                                            hashMap.put("uDescr", description);
+                                            hashMap.put("pImage", downloadUri);
+
+                                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
+                                            ref.child(editPostId)
+                                                    .updateChildren(hashMap)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            pd.dismiss();
+                                                            Toast.makeText(AddPostActivity.this,"게시물 수정완료", Toast.LENGTH_SHORT).show();
+
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            pd.dismiss();
+                                                            Toast.makeText(AddPostActivity.this,"게시물 수정실패"+e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    });
+                                        }
+
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        //image not uploaded
+                                        pd.dismiss();
+                                        Toast.makeText(AddPostActivity.this,"게시물 수정실패"+e.getMessage(),Toast.LENGTH_SHORT);
+                                    }
+                                });
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        pd.dismiss();
+                        Toast.makeText(AddPostActivity.this,"게시물 수정실패"+e.getMessage(),Toast.LENGTH_SHORT);
+                    }
+                });
+        
+    }
+
+    private void uploadData(final String title, final String description) {
+        Log.v(TAG, "==============uploadData 가져오기 시작!==============");
         pd.setMessage("게시물 게시중");
         pd.show();
+        Log.v(TAG, "uploadData title:"+title );
+        Log.v(TAG, "uploadData description:"+description );
+        //Log.v(TAG, "uploadData uri:"+uri );
 
         //for post-image name, post-id, post -publish-time
         final String timeStamp = String.valueOf(System.currentTimeMillis());
 
         String filePathAndName = "Posts/"+"post"+timeStamp;
 
-        if(!uri.equals("noImage")){
+        if(imageIv.getDrawable() != null){
+            //get image from imageview
+            Bitmap bitmap = ((BitmapDrawable)imageIv.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            //image compress
+            bitmap.compress(Bitmap.CompressFormat.PNG,100,baos);
+            byte[] data = baos.toByteArray();
+
+
             //post with image
-            StorageReference reference= FirebaseStorage.getInstance().getReference().child(filePathAndName);
-            reference.putFile(Uri.parse(uri))
+            StorageReference ref= FirebaseStorage.getInstance().getReference().child(filePathAndName);
+            ref.putBytes(data)
                     .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             //image is uploaded to firebase storage, now get it's url
+                            Log.v(TAG, "taskSnapshot : "+taskSnapshot);
+                            Log.v(TAG, "taskSnapshot.getMetadata() : "+taskSnapshot.getMetadata());
+                            Log.v(TAG, "taskSnapshot.getError() : "+taskSnapshot.getError());
+                            Log.v(TAG, "taskSnapshot.getStorage() : "+taskSnapshot.getStorage());
+                            Log.v(TAG, "taskSnapshot.getStorage().getDownloadUrl() : "+taskSnapshot.getStorage().getDownloadUrl());
+                            Log.v(TAG, "taskSnapshot.getTask().getResult() : "+taskSnapshot.getTask().getResult());
+                            //Log.v(TAG, "uriTask : "+taskSnapshot);
+
                             Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+
+                            Log.v(TAG, "uriTask.isSuccessful()전:"+uriTask.isSuccessful());
+                            Log.v(TAG, "uriTask.getException()전:"+uriTask.getException());
+
                             while(!uriTask.isSuccessful());
+
+                            Log.v(TAG, "uriTask.isSuccessful()후:"+uriTask.isSuccessful());
+                            Log.v(TAG, "uriTask.getException()후:"+uriTask.getException());
 
                             String downloadUri = uriTask.getResult().toString();
 
-
-                            while(uriTask.isSuccessful()){
+                            Log.v(TAG, "downloadUri:"+downloadUri);
+                            if(uriTask.isSuccessful()){
                                 //url is received upload post to firebase database
 
+                                Log.v(TAG, "while문 안:");
                                 HashMap<Object,String> hashMap = new HashMap<>();
                                 //put post info
                                 hashMap.put("uid",uid );
@@ -334,13 +659,16 @@ public class AddPostActivity extends AppCompatActivity {
                                                 descriptionEt.setText("");
                                                 imageIv.setImageURI(null);
                                                 image_uri=null;
+
+                                                Log.v(TAG, "==============uploadData 가져오기 끝!==============");
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
                                                 pd.dismiss();
-                                                Toast.makeText(AddPostActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(AddPostActivity.this,"게시물 업로드 실패1"+e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                Log.v(TAG, "==============uploadData 가져오기 끝!==============");
                                             }
                                         });
                             }
@@ -351,7 +679,8 @@ public class AddPostActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             //failed uploading image
                             pd.dismiss();
-                            Toast.makeText(AddPostActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddPostActivity.this,"게시물 업로드 실패2"+e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Log.v(TAG, "==============uploadData 가져오기 끝!==============");
                         }
                     });
 
@@ -384,6 +713,8 @@ public class AddPostActivity extends AppCompatActivity {
                             descriptionEt.setText("");
                             imageIv.setImageURI(null);
                             image_uri=null;
+                            imageIv.setImageURI(image_uri);
+                            Log.v(TAG, "==============uploadData 가져오기 끝!==============");
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -391,6 +722,7 @@ public class AddPostActivity extends AppCompatActivity {
                         public void onFailure(@NonNull Exception e) {
                             pd.dismiss();
                             Toast.makeText(AddPostActivity.this,""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Log.v(TAG, "==============uploadData 가져오기 끝!==============");
                         }
                     });
 
@@ -399,6 +731,7 @@ public class AddPostActivity extends AppCompatActivity {
     }
 
     private void showImagePickDialog() {
+        Log.v(TAG, "==============showImagePickDialog 시작!==============");
 
         //options(camera,gallery) to show in dialog
         String[] options = {"카메라","앨범"};
@@ -415,6 +748,7 @@ public class AddPostActivity extends AppCompatActivity {
                 if(i==0){
                     //camera clicked
                     //we need to check permissions first
+                    Log.v(TAG, "==============showImagePickDialog 카메라 클릭!==============");
 
                     if(!checkCameraPermission()){
                         requestCameraPermission();
@@ -422,12 +756,13 @@ public class AddPostActivity extends AppCompatActivity {
                         pickFromCamera();
                     }
                 }
+
                 if(i==1){
                     //gallery clicked
                     //we need to check permissions first
-
+                    Log.v(TAG, "==============showImagePickDialog 앨범 클릭!==============");
                     if(!checkStoragePermission()){
-
+                        requestStoragePermission();
                     }else{
                         pickFromGallery();
                     }
@@ -437,10 +772,12 @@ public class AddPostActivity extends AppCompatActivity {
         });
         //create and show dialog
         builder.create().show();
+        Log.v(TAG, "==============showImagePickDialog 끝!==============");
 
     }
 
     private void pickFromCamera() {
+        Log.v(TAG, "==============pickFromCamera 가져오기 시작!==============");
         //intent to pick image from camera
         ContentValues cv = new ContentValues();
         cv.put(MediaStore.Images.Media.TITLE,"Temp Pick");
@@ -450,20 +787,24 @@ public class AddPostActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT,image_uri);
         startActivityForResult(intent,IMAGE_PICK_CAMERA_CODE);
+        Log.v(TAG, "==============pickFromCamera 가져오기 끝!==============");
 
     }
 
     private void pickFromGallery(){
+        Log.v(TAG, "==============pickFromGallery 가져오기 시작!==============");
         //intent to pick image from gallery
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
+        Log.v(TAG, "==============pickFromGallery 가져오기 끝!==============");
 
     }
 
     //handle permission results
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.v(TAG, "==============onRequestPermissionsResult 가져오기 시작!==============");
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         //this method is called when user press Allow or Deny from permission request dialog
@@ -480,14 +821,16 @@ public class AddPostActivity extends AppCompatActivity {
                     if(cameraAccepted && storageAccepted){
                         //both permission are granted
                         pickFromCamera();
+                        Log.v(TAG, "==============onRequestPermissionsResult 가져오기 끝!==============");
                     }
                     else{
                         //camera or gallery or both permissions were denied
                         Toast.makeText(this,"카메라와 앨범의 권한을 모두 허용해야합니다.", Toast.LENGTH_SHORT).show();
+                        Log.v(TAG, "==============onRequestPermissionsResult 가져오기 끝!==============");
                     }
 
                 }else{
-
+                    Log.v(TAG, "==============onRequestPermissionsResult 가져오기 끝!==============");
                 }
             }
             break;
@@ -499,10 +842,12 @@ public class AddPostActivity extends AppCompatActivity {
                     if(storageAccepted){
                         //storage permission granted
                         pickFromGallery();
+                        Log.v(TAG, "==============onRequestPermissionsResult 가져오기 끝!==============");
                     }
                     else{
                         //camera or gallery or both permissions were denied
                         Toast.makeText(this,"앨범의 권한을 허용해야합니다.", Toast.LENGTH_SHORT).show();
+                        Log.v(TAG, "==============onRequestPermissionsResult 가져오기 끝!==============");
                     }
                 }
             }
@@ -513,7 +858,7 @@ public class AddPostActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-
+        Log.v(TAG, "==============onActivityResult 시작!==============");
         //this method will be called after picking image from camera or gallery
 
         if(resultCode==RESULT_OK){
@@ -524,12 +869,14 @@ public class AddPostActivity extends AppCompatActivity {
 
                 //set to imageview
                 imageIv.setImageURI(image_uri);
+                Log.v(TAG, "==============onActivityResult 끝!==============");
 
             }
             else if(requestCode==IMAGE_PICK_CAMERA_CODE){
                 //image is picked from camera, get uri of image
 
                 imageIv.setImageURI(image_uri);
+                Log.v(TAG, "==============onActivityResult 끝!==============");
 
             }
 
@@ -537,11 +884,13 @@ public class AddPostActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+        Log.v(TAG, "==============onActivityResult 끝!==============");
 
 
     }
 
     private void checkUserStatus(){
+        Log.v(TAG, "checkUserStatus 함수 시작");
         //get current user
         // FirebaseUser user = firebaseAuth.getCurrentUser();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();// 현재 유저가 있는지 없는지 확인 + 현재 유저 정보 가져옴
@@ -555,8 +904,10 @@ public class AddPostActivity extends AppCompatActivity {
             Log.v(TAG, "checkUserStatus 의 FirebaseUser email : "+email);
             Log.v(TAG, "checkUserStatus 의 FirebaseUser uid : "+uid);
 
+            Log.v(TAG, "checkUserStatus 함수 user 있음! 함수 끝");
         }else{
             //user not signed in, go to main activity
+            Log.v(TAG, "checkUserStatus 함수 유저 없음 메인으로 돌아가! 함수 끝!");
 
             startActivity(new Intent(this,MainActivity.class));
             finish();
