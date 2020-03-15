@@ -13,12 +13,14 @@ import android.content.SharedPreferences;
 import android.media.Image;
 import android.media.tv.TvContract;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     private Spinner spinner2;
     ArrayList<String> spinner_arrayList;
     ArrayAdapter<String> spinner_arrayAdapter;
+    Button refreshBtn;
 
 
     private ArrayList<Topitem_Data> topitem_data_arraylist;
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         ////////////////////////////////////////////////////////////////////////////////////////////
 
 
-        top_recyclerView = (RecyclerView) findViewById(R.id.top_recyclerview);
+       /* top_recyclerView = (RecyclerView) findViewById(R.id.top_recyclerview);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -103,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
         topitem_data_arraylist=new ArrayList<>();
         // specify an adapter (see also next example)
         top_mAdapter = new TopAdapter(topitem_data_arraylist);
-        top_recyclerView.setAdapter(top_mAdapter);
+        top_recyclerView.setAdapter(top_mAdapter);*/
 
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////
-        spinner_arrayList = new ArrayList<>();
+        /*spinner_arrayList = new ArrayList<>();
         spinner_arrayList.add("(정렬)");
         spinner_arrayList.add("거리순");
         spinner_arrayList.add("평점순");
@@ -129,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
-        });
+        });*/
 
         //플로팅 버튼 이름으로 찾아 오기
         findViewById(R.id.addpost_btn).setOnClickListener(onClickListener);
@@ -145,6 +148,9 @@ public class MainActivity extends AppCompatActivity {
 
         //set layout to recyclerview
         post_recyclerView.setLayoutManager(layoutManager);
+
+        //refreshBtn.findViewById(R.id.refresh_btn);
+        //refreshBtn.setVisibility(View.GONE);
 
 
         //init post list
@@ -311,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
 
     }//onCreate
 
+
     private void loadPosts() {
         //path of all posts
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
@@ -324,6 +331,8 @@ public class MainActivity extends AppCompatActivity {
                     ModelPost modelPost = ds.getValue(ModelPost.class);
 
                     postList.add(modelPost);
+                    Log.v(TAG, "loadPosts 함수");
+                    Log.v(TAG, "loadPosts 함수의 postList.size() : "+ postList.size());
 
                     //adapter
                     adapterPosts = new AdapterPosts(MainActivity.this,postList);
@@ -410,12 +419,12 @@ public class MainActivity extends AppCompatActivity {
 
             switch (v.getId()){
 
-                case R.id.add_topbtn:
+                /*case R.id.add_topbtn:
 
                     addtop();
 
 
-                    break;
+                    break;*/
 
                 case R.id.addpost_btn:
 

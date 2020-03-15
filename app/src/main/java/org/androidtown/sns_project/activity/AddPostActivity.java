@@ -351,8 +351,7 @@ public class AddPostActivity extends AppCompatActivity {
                     }else {
                         //post with image
                         uploadData(title,description,String.valueOf(image_uri));
-                    }
-*/
+                    }*/
                     break;
 
                 case R.id.pImageIv:
@@ -407,6 +406,7 @@ public class AddPostActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         pd.dismiss();
                         Toast.makeText(AddPostActivity.this,"게시물 수정완료", Toast.LENGTH_SHORT).show();
+                        finish();
 
                     }
                 })
@@ -466,6 +466,7 @@ public class AddPostActivity extends AppCompatActivity {
                                         public void onSuccess(Void aVoid) {
                                             pd.dismiss();
                                             Toast.makeText(AddPostActivity.this,"게시물 수정완료", Toast.LENGTH_SHORT).show();
+                                            finish();
 
                                         }
                                     })
@@ -531,8 +532,8 @@ public class AddPostActivity extends AppCompatActivity {
                                             hashMap.put("uName", name);
                                             hashMap.put("uEmail", email);
                                             hashMap.put("uDp", dp);
-                                            hashMap.put("uTitle", title);
-                                            hashMap.put("uDescr", description);
+                                            hashMap.put("pTitle", title);
+                                            hashMap.put("pDescr", description);
                                             hashMap.put("pImage", downloadUri);
 
                                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Posts");
@@ -543,6 +544,7 @@ public class AddPostActivity extends AppCompatActivity {
                                                         public void onSuccess(Void aVoid) {
                                                             pd.dismiss();
                                                             Toast.makeText(AddPostActivity.this,"게시물 수정완료", Toast.LENGTH_SHORT).show();
+                                                            finish();
 
                                                         }
                                                     })
@@ -655,11 +657,11 @@ public class AddPostActivity extends AppCompatActivity {
                                                 pd.dismiss();
                                                 Toast.makeText(AddPostActivity.this,"게시물 업로드 완료",Toast.LENGTH_SHORT).show();
                                                 //reset views
-                                                titleEt.setText("");
-                                                descriptionEt.setText("");
-                                                imageIv.setImageURI(null);
-                                                image_uri=null;
-
+                                                //titleEt.setText("");
+                                                //descriptionEt.setText("");
+                                                //imageIv.setImageURI(null);
+                                                //image_uri=null;
+                                                finish();
                                                 Log.v(TAG, "==============uploadData 가져오기 끝!==============");
                                             }
                                         })
@@ -709,11 +711,12 @@ public class AddPostActivity extends AppCompatActivity {
                             //added in database
                             pd.dismiss();
                             Toast.makeText(AddPostActivity.this,"게시물 업로드 완료",Toast.LENGTH_SHORT).show();
-                            titleEt.setText("");
-                            descriptionEt.setText("");
-                            imageIv.setImageURI(null);
-                            image_uri=null;
-                            imageIv.setImageURI(image_uri);
+                            //titleEt.setText("");
+                            //descriptionEt.setText("");
+                            //imageIv.setImageURI(null);
+                            //image_uri=null;
+                            //imageIv.setImageURI(image_uri);
+                            finish();
                             Log.v(TAG, "==============uploadData 가져오기 끝!==============");
                         }
                     })
