@@ -137,25 +137,7 @@ public class MainActivity extends AppCompatActivity {
         //플로팅 버튼 이름으로 찾아 오기
         findViewById(R.id.addpost_btn).setOnClickListener(onClickListener);
 
-        ////////////////////////////////////////////////////////////////////////////////////////////
 
-        //recyler view and its properties
-        post_recyclerView= findViewById(R.id.postsRecyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        //show newest post first , for this load from last
-        layoutManager.setStackFromEnd(true);
-        layoutManager.setReverseLayout(true);
-
-        //set layout to recyclerview
-        post_recyclerView.setLayoutManager(layoutManager);
-
-        //refreshBtn.findViewById(R.id.refresh_btn);
-        //refreshBtn.setVisibility(View.GONE);
-
-
-        //init post list
-        postList=new ArrayList<>();
-        loadPosts();
 
         ////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView=findViewById(R.id.bottom_navigation);
@@ -278,6 +260,26 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+
+            ////////////////////////////////////////////////////////////////////////////////////////////
+
+            //recyler view and its properties
+            post_recyclerView= findViewById(R.id.postsRecyclerview);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+            //show newest post first , for this load from last
+            layoutManager.setStackFromEnd(true);
+            layoutManager.setReverseLayout(true);
+
+            //set layout to recyclerview
+            post_recyclerView.setLayoutManager(layoutManager);
+
+            //refreshBtn.findViewById(R.id.refresh_btn);
+            //refreshBtn.setVisibility(View.GONE);
+
+
+            //init post list
+            postList=new ArrayList<>();
+            loadPosts();
 
             /*for (UserInfo profile : user.getProviderData()) { // 로그인된 유저의 회원정보를 받아온다.
                 // Id of the provider (ex: google.com)

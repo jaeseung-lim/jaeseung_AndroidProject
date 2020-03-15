@@ -175,8 +175,10 @@ public class PostDetailActivity extends AppCompatActivity {
 
                     commentList.add(modelComment);
 
+                    //pass myUid and postId as parameter of constructor of Comment Adapter
+
                     //setup adapter
-                    adapterComments = new AdapterComments(getApplicationContext(),commentList);
+                    adapterComments = new AdapterComments(getApplicationContext(),commentList,myUid,postId);
 
                     //set adapter
                     recyclerView.setAdapter(adapterComments);
@@ -494,6 +496,7 @@ public class PostDetailActivity extends AppCompatActivity {
                         Log.v(TAG, "DocumentSnapshot data: " + documentSnapshot.getData());
 
                         myName= (String) documentSnapshot.getData().get("name");
+                        myDp=(String) documentSnapshot.getData().get("photoUrl");
                         String memberImage= (String) documentSnapshot.getData().get("photoUrl");
 
                         Log.v(TAG, "name data: " + myName);

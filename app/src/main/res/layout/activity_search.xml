@@ -60,6 +60,7 @@
                                 android:id="@+id/search_recyclerview_business"
                                 android:layout_width="407dp"
                                 android:layout_height="670dp"
+                                tools:listitem="@layout/row_news"
                                 app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"

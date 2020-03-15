@@ -46,7 +46,7 @@ public class MemberInfoAdapter extends RecyclerView.Adapter<MemberInfoAdapter.Me
 
         //get data
         final String memberUID=memberinfoList.get(position).getMemberUid();
-        String memberProfileImage=memberinfoList.get(position).getphotoUrl();
+        String memberProfileImage=memberinfoList.get(position).getPhotoUrl();
         final String memberProfileName=memberinfoList.get(position).getName();
         String memberProfileIntroduce=memberinfoList.get(position).getIntroduce();
 

@@ -45,7 +45,8 @@
                     android:id="@+id/members_memberlist_recyclerview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_margin="15dp" />
+                    android:layout_margin="15dp"
+                    tools:listitem="@layout/item_memberlist"/>
 
             </LinearLayout>
 

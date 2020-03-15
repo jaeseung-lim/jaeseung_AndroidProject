@@ -285,24 +285,24 @@ public class ChatActivity extends AppCompatActivity {
         //nowDate 변수에 값을 저장한다.
         //String formatDate=sdfNow.format(date);
 
-        String formatDate= String.valueOf(System.currentTimeMillis()); // 현재 시간을 파이어베이스에 저장해주고
+        String formatDate = String.valueOf(System.currentTimeMillis()); // 현재 시간을 파이어베이스에 저장해주고
 
-        Log.v(TAG, "formatDate : "+formatDate);
+        Log.v(TAG, "formatDate : " + formatDate);
 
         //firebaseDatabase=FirebaseDatabase.getInstance();
-        DatabaseReference databaseReference=FirebaseDatabase.getInstance().getReference();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
 
-        HashMap<String,Object> hashMap = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
         hashMap.put("sender", myUid);
-        hashMap.put("receiver",memberUid);
-        hashMap.put("message",message);
-        hashMap.put("timestamp",formatDate);
+        hashMap.put("receiver", memberUid);
+        hashMap.put("message", message);
+        hashMap.put("timestamp", formatDate);
 
         databaseReference.child("Chats").push().setValue(hashMap);
 
 
         user = FirebaseAuth.getInstance().getCurrentUser();
-        db=FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
         DocumentReference docRef = db.collection("Members").document(user.getUid());
 
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -314,22 +314,22 @@ public class ChatActivity extends AppCompatActivity {
                         Log.v(TAG, "sendMessage 메서드의 DocumentSnapshot data: " + document.getData());
                         //document.getData().get("photoUrl");
 
-                        String membername= (String) document.getData().get("name");
+                        String membername = (String) document.getData().get("name");
 
                         Log.v(TAG, "sendMessage 메서드의 document.getData().get(\"name\") : " + membername);
 
                         Log.v(TAG, "notify  : " + notify);
-                        if(notify){
+                        if (notify) {
 
                             //sendNotification(memberUid,memberinfo.getName(),message);
                             Log.v(TAG, "sendNotification 파라메터 memberUid : " + memberUid);
                             Log.v(TAG, "sendNotification 파라메터 membername : " + membername);
                             Log.v(TAG, "sendNotification 파라메터 message: " + message);
 
-                            sendNotification(memberUid,membername,message);
+                            sendNotification(memberUid, membername, message);
                         }
 
-                        notify=false;
+                        notify = false;
                         Log.v(TAG, "notify  : " + notify);
 
                     } else {
@@ -412,6 +412,47 @@ public class ChatActivity extends AppCompatActivity {
 
         //reset edittecxt after sending message
         chat_messageEt.setText("");*/
+
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //create chatlist node/child in firebase database
+        final DatabaseReference chatRef1 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(myUid)
+                .child(memberUid);
+
+        chatRef1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    chatRef1.child("id").setValue(memberUid);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        final DatabaseReference chatRef2 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(memberUid)
+                .child(myUid);
+
+        chatRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if (!dataSnapshot.exists()) {
+                    chatRef2.child("id").setValue(myUid);
+                }
+            }
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+
+        });
 
     }
 
